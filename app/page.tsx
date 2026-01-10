@@ -8,6 +8,12 @@ import { Slider } from "@/components/ui/slider"
 import { publicClient } from "@/lib/viem-client"
 import { CheckCircle2 } from "lucide-react"
 
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
+
 const CONFIG = {
   SKIN_TOKEN: "0x7e994f015b60d97a26382ec5372039c89dd2eb07",
   SKIN_REQUIRED: BigInt("4164305") * BigInt("1000000000000000000"), // 4164305 * 10^18
@@ -505,11 +511,13 @@ export default function Home() {
     }
   }, [generatedName, sliders, farcasterPfp])
 
-  const connectWallet = async () => {
-    if (typeof window.ethereum === "undefined") {
-      alert("Please install MetaMask to connect your wallet")
-      return
-    }
+const connectWallet = async () => {
+  if (typeof window === "undefined") return;
+
+  if (typeof window.ethereum === "undefined") {
+    alert("Please install MetaMask to connect your wallet");
+    return;
+  }
 
     try {
       setIsConnecting(true)
@@ -524,6 +532,25 @@ export default function Home() {
       setIsConnecting(false)
     }
   }
+
+  const provider = window.ethereum;
+
+const BASE_CHAIN_ID_HEX = "0x2105"; // 8453 в hex, Base mainnet
+await provider.request({
+  method: "wallet_switchEthereumChain",
+  params: [{ chainId: BASE_CHAIN_ID_HEX }],
+})
+  
+await provider.request({
+  method: "wallet_addEthereumChain",
+  params: [{
+    chainId: BASE_CHAIN_ID_HEX,
+    chainName: "Base Mainnet",
+    nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+    rpcUrls: ["https://mainnet.base.org"],
+    blockExplorerUrls: ["https://basescan.org"],
+  }],
+})
 
   const disconnectWallet = () => {
     setWalletAddress(null)
