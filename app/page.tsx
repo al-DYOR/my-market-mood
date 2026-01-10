@@ -1,19 +1,7 @@
 "use client"
 
-import { sdk } from '@farcaster/miniapp-sdk'
-
-useEffect(() => {
-  sdk.actions.ready().catch(err => console.error('Ready failed', err))
-  console.log("Called sdk.actions.ready()")
-}, [])
-
-  // твой текущий UI (слайдеры, текст и т.д.) остаётся без изменений
-  return (
-    // ...
-  )
-}
-
 import { useState, useEffect } from "react"
+import { sdk } from '@farcaster/miniapp-sdk'
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
@@ -496,6 +484,13 @@ export default function Home() {
   const [showErrorToast, setShowErrorToast] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string>("")
 
+    useEffect(() => {
+    sdk.actions
+      .ready()
+      .then(() => console.log("[Farcaster] sdk.ready()"))
+      .catch((err) => console.error("[Farcaster] ready failed", err))
+  }, [])
+  
   useEffect(() => {
     if (walletAddress) {
       checkTokenBalances()
