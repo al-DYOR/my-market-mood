@@ -9,11 +9,13 @@ import '@coinbase/onchainkit/styles.css'
 export function MiniKitWrapper({ children }: { children: React.ReactNode }) {
   const miniKit = useMiniKit()
 
-  useEffect(() => {
-    if (miniKit && !miniKit.isFrameReady) {
-      miniKit.setFrameReady()
-    }
-  }, [miniKit])
+ useEffect(() => {
+  console.log("MiniKit useEffect triggered, isFrameReady:", miniKit?.isFrameReady)
+  if (miniKit && !miniKit.isFrameReady) {
+    console.log("Calling setFrameReady()")
+    miniKit.setFrameReady()
+  }
+}, [miniKit])
 
   return (
     <OnchainKitProvider
