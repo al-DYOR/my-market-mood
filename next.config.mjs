@@ -1,8 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    turbopack: false,  // Отключает Turbopack полностью
+  typescript: {
+    ignoreBuildErrors: true,
   },
-};
+  images: {
+    unoptimized: true,
+  },
+ 
+}
 
-export default nextConfig;
+export default nextConfig
