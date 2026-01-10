@@ -1221,36 +1221,50 @@ const connectWallet = async () => {
                 <span className={isEligible ? "text-green-500" : "text-destructive"}>{getEligibilityStatus()}</span>
               </p>
 
-              <div
-                className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
-                  isSkinSatisfied ? "border-green-500/50 bg-green-500/10" : "border-border/30 bg-muted/20"
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-semibold">$skin: 4,164,305</p>
-                    <p className="text-xs text-muted-foreground">Burn to mint</p>
-                  </div>
-                  {isSkinSatisfied && <CheckCircle2 className="w-6 h-6 text-green-500" />}
-                </div>
-              </div>
-
-              {!isSkinSatisfied && (
-                <div
-                  className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
-                    isByemoneySatisfied ? "border-green-500/50 bg-green-500/10" : "border-border/30 bg-muted/20"
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-semibold">$byemoney: 1,000,000</p>
-                      <p className="text-xs text-muted-foreground">Hold to mint</p>
-                    </div>
-                    {isByemoneySatisfied && <CheckCircle2 className="w-6 h-6 text-green-500" />}
-                  </div>
-                </div>
-              )}
-            </div>
+              <div className="p-6 bg-muted/50 rounded-xl border mb-6 space-y-4">
+  <h3 className="text-xl font-bold text-center mb-4">Mint Requirements:</h3>
+  
+  <div className="flex items-center justify-center gap-6 text-lg">
+    {/* SKIN */}
+    <div className="flex flex-col items-center p-3 bg-background rounded-lg border cursor-pointer hover:shadow-md transition-all group" 
+         onClick={() => {
+           // Farcaster/Base App: открыть token page
+           if (typeof window !== 'undefined') {
+             window.open(`https://miniapps.farcaster.xyz/${CONFIG.SKIN_TOKEN}`, '_blank')
+           }
+         }}>
+      <span className="font-bold text-primary text-lg mb-1">{skinRequired.toString()}</span>
+      <span className="text-sm text-muted-foreground font-medium group-hover:underline hover:text-primary transition-colors cursor-pointer px-2 py-1 rounded">
+        $SKIN
+      </span>
+      <span className="text-xs bg-destructive/20 text-destructive px-2 py-1 rounded-full mt-2">
+        Burn to mint
+      </span>
+    </div>
+    
+    {/* OR */}
+    <div className="text-2xl font-bold text-destructive tracking-wider px-4 py-2 bg-destructive/10 rounded-lg">
+      OR
+    </div>
+    
+    {/* BYEMONEY */}
+    <div className="flex flex-col items-center p-3 bg-background rounded-lg border cursor-pointer hover:shadow-md transition-all group" 
+         onClick={() => {
+           // Farcaster/Base App: открыть token page  
+           if (typeof window !== 'undefined') {
+             window.open(`https://miniapps.farcaster.xyz/${CONFIG.BYEMONEY_TOKEN}`, '_blank')
+           }
+         }}>
+      <span className="font-bold text-primary text-lg mb-1">{byemoneyRequired.toString()}</span>
+      <span className="text-sm text-muted-foreground font-medium group-hover:underline hover:text-primary transition-colors cursor-pointer px-2 py-1 rounded">
+        $BYEMONEY
+      </span>
+      <span className="text-xs bg-primary/20 text-primary px-2 py-1 rounded-full mt-2">
+        Hold to mint ✓
+      </span>
+    </div>
+  </div>
+</div>
 
             <Button
               onClick={mintNFT}
