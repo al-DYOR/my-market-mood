@@ -6,11 +6,11 @@ import { useEffect } from 'react'
 
 export default function Home() {
   useEffect(() => {
-    if (window.MiniKit) {  // проверка, что мы в Mini App контексте
-      window.MiniKit.actions.ready()
-      console.log("Called MiniKit.actions.ready()")
-    }
-  }, [])
+  if (window.parent !== window) {
+    window.parent.postMessage({ type: 'ready' }, '*')
+    console.log("Sent postMessage ready")
+  }
+}, [])
 
   // твой текущий UI (слайдеры, текст и т.д.) остаётся без изменений
   return (
