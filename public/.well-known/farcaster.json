@@ -1,0 +1,18 @@
+{
+  "accountAssociation": {
+    "header": "eyJmaWQiOjMxMDgxNSwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweEJCNzQyM2NmNTc0NTlCRWQ4YjM2NDlEODgwMzlBOGUxMzBmN2Y0OEQifQ",
+    "payload": "eyJkb21haW4iOiJ2MC1teW1hcmtldG1vb2QudmVyY2VsLmFwcCJ9",
+    "signature": "yWklO5O9aSULzTaGyD+PXYKu+ExI4WPz9BDSs8UcTngbcLQnRf27BbXZlPW6DiXBRaI+FgPR+zvedB/oQ2OzHhs="
+  },
+  "frame": {
+    "version": "1",
+    "name": "Example Frame",
+    "iconUrl": "https://v0-mymarketmood.vercel.app/icon.png",
+    "homeUrl": "https://v0-mymarketmood.vercel.app",
+    "imageUrl": "https://v0-mymarketmood.vercel.app/image.png",
+    "buttonTitle": "Check this out",
+    "splashImageUrl": "https://v0-mymarketmood.vercel.app/splash.png",
+    "splashBackgroundColor": "#eeccff",
+    "webhookUrl": "https://v0-mymarketmood.vercel.app/api/webhook"
+  }
+}
