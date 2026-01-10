@@ -533,25 +533,6 @@ const connectWallet = async () => {
     }
   }
 
-  const provider = window.ethereum;
-
-const BASE_CHAIN_ID_HEX = "0x2105"; // 8453 в hex, Base mainnet
-await provider.request({
-  method: "wallet_switchEthereumChain",
-  params: [{ chainId: BASE_CHAIN_ID_HEX }],
-})
-  
-await provider.request({
-  method: "wallet_addEthereumChain",
-  params: [{
-    chainId: BASE_CHAIN_ID_HEX,
-    chainName: "Base Mainnet",
-    nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
-    rpcUrls: ["https://mainnet.base.org"],
-    blockExplorerUrls: ["https://basescan.org"],
-  }],
-})
-
   const disconnectWallet = () => {
     setWalletAddress(null)
     setFarcasterFid(null)
