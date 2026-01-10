@@ -1,11 +1,12 @@
-Create a new file app/MiniKitWrapper.tsx as a client component with "use client" at the top.
-Import OnchainKitProvider from '@coinbase/onchainkit'
-Import { useMiniKit } from '@coinbase/onchainkit/minikit'
-Import { base } from 'viem/chains'
-Import useEffect from 'react'
-Import '@coinbase/onchainkit/styles.css'  // for any necessary styles, but it won't break UI
+"use client"
 
-Make the component export function MiniKitWrapper({ children }: { children: React.ReactNode }) {
+import { OnchainKitProvider } from '@coinbase/onchainkit'
+import { useMiniKit } from '@coinbase/onchainkit/minikit'
+import { base } from 'viem/chains'
+import { useEffect } from 'react'
+import '@coinbase/onchainkit/styles.css'
+
+export function MiniKitWrapper({ children }: { children: React.ReactNode }) {
   const miniKit = useMiniKit()
 
   useEffect(() => {
@@ -17,7 +18,7 @@ Make the component export function MiniKitWrapper({ children }: { children: Reac
   return (
     <OnchainKitProvider
       chain={base}
-      rpcUrl="https://mainnet.base.org"  // public free RPC, no api key needed
+      rpcUrl="https://mainnet.base.org"
       miniKit={{ enabled: true }}
     >
       {children}
