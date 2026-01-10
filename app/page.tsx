@@ -471,8 +471,6 @@ const saveUsedName = (walletAddress: string, name: string, farcasterFid?: string
 
 export default function Home() {
   const [walletAddress, setWalletAddress] = useState<string | null>(null)
-  const [farcasterFid, setFarcasterFid] = useState<string | null>(null)
-  const [farcasterPfp, setFarcasterPfp] = useState<string | null>(null)
   const [isConnecting, setIsConnecting] = useState(false)
   const [isMinting, setIsMinting] = useState(false)
   const [mintError, setMintError] = useState<string | null>(null)
@@ -492,16 +490,14 @@ export default function Home() {
   useEffect(() => {
     if (walletAddress) {
       checkTokenBalances()
-      fetchFarcasterFid(walletAddress)
     }
   }, [walletAddress])
 
   useEffect(() => {
-    if (generatedName) {
-      console.log("[v0] Generated name changed, regenerating image:", generatedName)
+    if (generatedName && generatedImage === null) {
       generatePreviewImage()
     }
-  }, [generatedName, sliders, farcasterPfp])
+  }, [generatedName])
 
   const connectWallet = async () => {
     if (typeof window.ethereum === "undefined") {
@@ -525,8 +521,6 @@ export default function Home() {
 
   const disconnectWallet = () => {
     setWalletAddress(null)
-    setFarcasterFid(null)
-    setFarcasterPfp(null) // Clear PFP on disconnect
   }
 
   const handleSliderChange = (id: string, value: number[]) => {
@@ -543,22 +537,17 @@ export default function Home() {
     setResult(state)
 
     if (walletAddress) {
-      const userKey = farcasterFid ? `${walletAddress}_${farcasterFid}` : walletAddress
-      const usedNames = getUsedNames(walletAddress, farcasterFid || undefined)
-      console.log(`[v0] User key: ${userKey}`)
+      const usedNames = getUsedNames(walletAddress, undefined)
       console.log(`[v0] Previously used names (${usedNames.length}):`, usedNames)
 
       const uniqueName = generateUniqueName(sliders, usedNames)
       console.log(`[v0] Generated new unique name: ${uniqueName}`)
       setGeneratedName(uniqueName)
 
-      saveUsedName(walletAddress, uniqueName, farcasterFid || undefined)
+      saveUsedName(walletAddress, uniqueName, undefined)
 
-      // Verify it was saved
-      const updatedUsedNames = getUsedNames(walletAddress, farcasterFid || undefined)
-      console.log(`[v0] Updated used names count: ${updatedUsedNames.length}`)
+      generatePreviewImage()
     } else {
-      // If no wallet connected, generate without uniqueness tracking
       const uniqueName = generateUniqueName(sliders, [])
       setGeneratedName(uniqueName)
     }
@@ -570,137 +559,70 @@ export default function Home() {
   }
 
   const generateNFTImage = async (): Promise<string> => {
-    return new Promise(async (resolve) => {
+    return new Promise((resolve) => {
       const canvas = document.createElement("canvas")
       canvas.width = 1000
       canvas.height = 1000
       const ctx = canvas.getContext("2d")!
 
-      // Solid background based on Light/Heavy state with analog feel
+      // Background gradient based on Light/Heavy slider
+      const gradient = ctx.createLinearGradient(0, 0, 0, 1000)
       if (sliders.light < 50) {
-        // Light mode: warm off-white, not pure white
-        ctx.fillStyle = "#f8f6f3"
+        gradient.addColorStop(0, "#f5f5f7")
+        gradient.addColorStop(1, "#e8e8eb")
       } else {
-        // Dark mode: deep charcoal, not pure black
-        ctx.fillStyle = "#0f0f12"
+        gradient.addColorStop(0, "#1a1a1f")
+        gradient.addColorStop(1, "#0a0a0f")
       }
+      ctx.fillStyle = gradient
       ctx.fillRect(0, 0, 1000, 1000)
 
-      // Load and draw user PFP if available
-      if (farcasterPfp) {
-        try {
-          const img = new Image()
-          img.crossOrigin = "anonymous"
-
-          await new Promise<void>((resolveImage, rejectImage) => {
-            img.onload = () => {
-              // Draw PFP as full background
-              ctx.save()
-
-              // Calculate scaling to cover entire canvas
-              const scale = Math.max(1000 / img.width, 1000 / img.height)
-              const scaledWidth = img.width * scale
-              const scaledHeight = img.height * scale
-              const x = (1000 - scaledWidth) / 2
-              const y = (1000 - scaledHeight) / 2
-
-              const filters: string[] = []
-
-              // Base desaturation for analog feel (85-95% saturation)
-              filters.push("saturate(90%)")
-
-              // Gentle contrast curve (no harsh blacks/whites)
-              filters.push("contrast(95%)")
-
-              // Slight brightness adjustment to preserve skin tones
-              filters.push("brightness(102%)")
-
-              // Apply blur for Distracted state
-              if (sliders.focused >= 50) {
-                const blurAmount = ((sliders.focused - 50) / 50) * 3 // 0-3px subtle blur
-                filters.push(`blur(${blurAmount}px)`)
-              }
-
-              // Adjust for Calm/Anxious state with subtlety
-              if (sliders.calm >= 50) {
-                // Anxious: very slight increase in contrast only
-                const anxietyLevel = (sliders.calm - 50) / 50
-                const contrast = 95 + anxietyLevel * 8 // 95-103%
-                filters[1] = `contrast(${contrast}%)`
-              } else {
-                // Calm: reduce saturation further for muted look
-                const calmLevel = (50 - sliders.calm) / 50
-                const saturation = 90 - calmLevel * 15 // 75-90%
-                filters[0] = `saturate(${saturation}%)`
-              }
-
-              ctx.filter = filters.join(" ")
-
-              // Draw the transformed image
-              ctx.drawImage(img, x, y, scaledWidth, scaledHeight)
-              ctx.restore()
-
-              ctx.globalAlpha = 0.04
-              const grainData = ctx.createImageData(1000, 1000)
-              for (let i = 0; i < grainData.data.length; i += 4) {
-                const noise = Math.random() * 255
-                grainData.data[i] = noise
-                grainData.data[i + 1] = noise
-                grainData.data[i + 2] = noise
-                grainData.data[i + 3] = 255
-              }
-              ctx.putImageData(grainData, 0, 0)
-              ctx.globalAlpha = 1
-
-              const vignetteGradient = ctx.createRadialGradient(500, 500, 300, 500, 500, 700)
-              vignetteGradient.addColorStop(0, "rgba(0, 0, 0, 0)")
-              vignetteGradient.addColorStop(0.7, "rgba(0, 0, 0, 0.05)")
-              vignetteGradient.addColorStop(1, "rgba(0, 0, 0, 0.25)")
-              ctx.fillStyle = vignetteGradient
-              ctx.fillRect(0, 0, 1000, 1000)
-
-              resolveImage()
-            }
-
-            img.onerror = () => {
-              console.error("Failed to load PFP image")
-              rejectImage()
-            }
-          })
-
-          img.src = farcasterPfp
-        } catch (error) {
-          console.error("Error loading PFP:", error)
-          // Fallback to simple background if PFP fails
-          drawFallbackBackground(ctx)
+      // Chaos pattern
+      if (sliders.order >= 50) {
+        ctx.strokeStyle = sliders.light < 50 ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.1)"
+        ctx.lineWidth = 2
+        for (let i = 0; i < 20; i++) {
+          ctx.beginPath()
+          ctx.moveTo(Math.random() * 1000, Math.random() * 1000)
+          ctx.lineTo(Math.random() * 1000, Math.random() * 1000)
+          ctx.stroke()
         }
-      } else {
-        // No PFP available - draw fallback
-        drawFallbackBackground(ctx)
       }
 
-      if (generatedName) {
-        ctx.save()
+      // Colored ring for Calm/Anxious
+      const anxietyLevel = sliders.calm / 100
+      const hue = 200 + anxietyLevel * 60
+      ctx.strokeStyle = `hsla(${hue}, 60%, 50%, 0.3)`
+      ctx.lineWidth = 20
+      ctx.beginPath()
+      ctx.arc(500, 500, 300, 0, Math.PI * 2)
+      ctx.stroke()
 
-        // Subtle semi-transparent overlay for text embedding
-        ctx.fillStyle = "rgba(0, 0, 0, 0.15)"
-        ctx.fillRect(0, 820, 1000, 180)
+      // Blur effect for Distracted
+      if (sliders.focused >= 50) {
+        ctx.filter = `blur(${((sliders.focused - 50) / 50) * 5}px)`
+        ctx.fillStyle = sliders.light < 50 ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.2)"
+        ctx.fillRect(0, 0, 1000, 1000)
+        ctx.filter = "none"
+      }
 
-        ctx.font = "700 100px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+      // Wallet address
+      if (walletAddress) {
+        ctx.fillStyle = sliders.light < 50 ? "#333333" : "#cccccc"
+        ctx.font = "32px monospace"
         ctx.textAlign = "center"
         ctx.textBaseline = "middle"
+        const shortAddress = `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
+        ctx.fillText(shortAddress, 500, 500)
+      }
 
-        // First layer: subtle dark shadow for depth
-        ctx.fillStyle = "rgba(0, 0, 0, 0.4)"
-        ctx.fillText(generatedName, 500, 912)
-
-        // Second layer: main text with high contrast
-        ctx.fillStyle = "#ffffff"
-        ctx.shadowColor = "transparent"
-        ctx.shadowBlur = 0
-        ctx.fillText(generatedName, 500, 910)
-
-        ctx.restore()
+      // Generated name
+      if (generatedName) {
+        ctx.fillStyle = sliders.light < 50 ? "#000000" : "#ffffff"
+        ctx.font = "bold 80px -apple-system, BlinkMacSystemFont, sans-serif"
+        ctx.textAlign = "center"
+        ctx.textBaseline = "middle"
+        ctx.fillText(generatedName, 500, 850)
       }
 
       const dataUrl = canvas.toDataURL("image/png")
@@ -708,54 +630,30 @@ export default function Home() {
     })
   }
 
-  const drawFallbackBackground = (ctx: CanvasRenderingContext2D) => {
-    // Simple gradient based on state
-    const gradient = ctx.createLinearGradient(0, 0, 1000, 1000)
-
-    if (sliders.light < 50) {
-      gradient.addColorStop(0, "#f0f0f0")
-      gradient.addColorStop(1, "#d0d0d0")
-    } else {
-      gradient.addColorStop(0, "#2a2a2a")
-      gradient.addColorStop(1, "#0a0a0a")
-    }
-
-    ctx.fillStyle = gradient
-    ctx.fillRect(0, 0, 1000, 1000)
-
-    // Wallet address as fallback identifier
-    if (walletAddress) {
-      ctx.fillStyle = sliders.light < 50 ? "#666666" : "#999999"
-      ctx.font = "32px monospace"
-      ctx.textAlign = "center"
-      ctx.textBaseline = "middle"
-      const shortAddress = `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
-      ctx.fillText(shortAddress, 500, 500)
-    }
-  }
-
   const generateMetadata = (imageUrl: string, mintPath: "Burn SKIN" | "Hold BYEMONEY") => {
-    // Use Farcaster PFP if available, otherwise use wallet address placeholder
-    const identityValue = farcasterPfp ? `Farcaster Profile` : `Wallet Address`
-
     const metadata = {
-      name: generatedName || "Untitled",
+      name: generatedName || "Unknown",
       description: "Your trading state today",
       image: imageUrl,
       attributes: [
         {
           trait_type: "Market Mood",
-          value: generatedName || "Untitled",
+          value: generatedName || "Unknown",
         },
         {
           trait_type: "Identity",
-          value: identityValue,
+          value: "Wallet",
         },
-        // Optionally add Farcaster PFP URL if available
-        ...(farcasterPfp ? [{ trait_type: "Farcaster PFP", value: farcasterPfp }] : []),
+        {
+          trait_type: "State",
+          value: result || "",
+        },
+        {
+          trait_type: "Mint Path",
+          value: mintPath,
+        },
       ],
     }
-
     return metadata
   }
 
@@ -780,49 +678,6 @@ export default function Home() {
       setByemoneyBalance(byemoneyBal as bigint)
     } catch (error) {
       console.error("Error checking balances:", error)
-    }
-  }
-
-  const fetchFarcasterFid = async (address: string) => {
-    try {
-      const response = await fetch(`https://api.warpcast.com/v2/verifications?address=${address.toLowerCase()}`)
-      if (response.ok) {
-        const data = await response.json()
-        if (data.result?.fid) {
-          const fidValue = data.result.fid.toString()
-          setFarcasterFid(fidValue)
-          console.log(`[v0] Found Farcaster FID for ${address}: ${fidValue}`)
-
-          // Fetch profile picture
-          await fetchFarcasterProfile(fidValue)
-        } else {
-          console.log(`[v0] No Farcaster FID found for ${address}`)
-          setFarcasterFid(null)
-          setFarcasterPfp(null)
-        }
-      } else {
-        setFarcasterFid(null)
-        setFarcasterPfp(null)
-      }
-    } catch (error) {
-      console.error("Error fetching Farcaster FID:", error)
-      setFarcasterFid(null)
-      setFarcasterPfp(null)
-    }
-  }
-
-  const fetchFarcasterProfile = async (fid: string) => {
-    try {
-      const response = await fetch(`https://api.warpcast.com/v2/user-by-fid?fid=${fid}`)
-      if (response.ok) {
-        const data = await response.json()
-        if (data.result?.user?.pfp?.url) {
-          setFarcasterPfp(data.result.user.pfp.url)
-          console.log(`[v0] Found Farcaster PFP:`, data.result.user.pfp.url)
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching Farcaster profile:", error)
     }
   }
 
