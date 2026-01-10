@@ -2,14 +2,17 @@
 
 import { useEffect } from 'react'
 
-export default function Page() {
+// ... твой текущий код компонента
+
+export default function Home() {
   useEffect(() => {
-    if (window.parent !== window) {  // если в iframe/Mini App
-      window.parent.postMessage({ type: 'ready' }, '*')
+    if (window.MiniKit) {  // проверка, что мы в Mini App контексте
+      window.MiniKit.actions.ready()
+      console.log("Called MiniKit.actions.ready()")
     }
   }, [])
 
-  // твой текущий UI ниже
+  // твой текущий UI (слайдеры, текст и т.д.) остаётся без изменений
   return (
     // ...
   )
