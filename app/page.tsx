@@ -864,17 +864,22 @@ const connectWallet = async () => {
     setMintSuccess(null)
 
     try {
-      const skinBalanceRaw = await publicClient.readContract({
-        address: CONFIG.SKIN_TOKEN as `0x${string}`,
-        abi: ERC20_ABI,
-        functionName: "balanceOf",
-        args: [walletAddress as `0x${string}`],
+      // ✅ НОВОЕ: Проверяем, сжигал ли уже $skin
+    const hasBurnedSkin = typeof window !== 'undefined' && localStorage.getItem('hasBurnedSkin') === 'true'
+
+    const skinBalanceRaw = await publicClient.readContract({
+       address: CONFIG.SKIN_TOKEN as `0x${string}`,
+       abi: ERC20_ABI,
+       functionName: "balanceOf",
+       args: [walletAddress as `0x${string}`],
     }) as bigint
 
-      const skinBalance = skinBalanceRaw
-      const skinRequired = CONFIG.SKIN_REQUIRED
+    const skinBalance = skinBalanceRaw
+    const skinRequired = CONFIG.SKIN_REQUIRED
 
         console.log("SKIN RAW:", skinBalance.toString())
+        console.log("HAS BURNED SKIN:", hasBurnedSkin)
+
         console.log("SKIN REQUIRED:", skinRequired.toString())
 
       const byemoneyBalanceRaw = await publicClient.readContract({
@@ -890,26 +895,21 @@ const connectWallet = async () => {
       console.log("BYEMONEY RAW:", byemoneyBalance.toString())
       console.log("BYEMONEY REQUIRED:", byemoneyRequired.toString())
 
-      let mintPath: "Burn SKIN" | "Hold BYEMONEY"
+     const hasBurnedSkin = typeof window !== 'undefined' && localStorage.getItem('hasBurnedSkin') === 'true'
 
-      if (skinBalance >= skinRequired) {
-        console.log("Sufficient $skin balance, burning tokens...")
-        mintPath = "Burn SKIN"
+     let mintPath: "Burn SKIN" | "Hold BYEMONEY"
 
-        const burnData =
-          "0x42966c68" + // burn(uint256)
-          skinRequired.toString(16).padStart(64, "0")
+     if (hasBurnedSkin || skinBalance >= skinRequired) {
+     if (!hasBurnedSkin) {
+         console.log("Sufficient $skin balance, burning tokens...")
+         mintPath = "Burn SKIN"
 
-        const burnTxHash = await window.ethereum.request({
+     const burnData = "0x42966c68" + skinRequired.toString(16).padStart(64, "0")
+
+     const burnTxHash = await window.ethereum.request({
           method: "eth_sendTransaction",
-          params: [
-            {
-              from: walletAddress,
-              to: CONFIG.SKIN_TOKEN,
-              data: burnData,
-            },
-          ],
-        })
+          params: [{ from: walletAddress, to: CONFIG.SKIN_TOKEN, data: burnData }],
+    })
 
         console.log("$skin burn transaction sent:", burnTxHash)
 
@@ -929,6 +929,11 @@ const connectWallet = async () => {
         }
 
         console.log("$skin burned successfully, proceeding to mint...")
+       localStorage.setItem('hasBurnedSkin', 'true')  // 🔥 ТОЛЬКО ЭТУ СТРОКУ ДОБАВИТЬ
+         } else {
+    console.log("Already burned $skin previously, skipping burn...")
+    mintPath = "Burn SKIN"
+  }
       } else if (byemoneyBalance >= byemoneyRequired) {
         console.log("Sufficient $byemoney balance, proceeding to mint...")
         mintPath = "Hold BYEMONEY"
