@@ -1226,15 +1226,9 @@ const connectWallet = async () => {
   
   <div className="flex items-center justify-center gap-6 text-lg">
     {/* SKIN */}
-    <div className="flex flex-col items-center p-3 bg-background rounded-lg border cursor-pointer hover:shadow-md transition-all group" 
-         onClick={() => {
-           // Farcaster/Base App: открыть token page
-           if (typeof window !== 'undefined') {
-             window.open(`https://miniapps.farcaster.xyz/${CONFIG.SKIN_TOKEN}`, '_blank')
-           }
-         }}>
+    <div className="flex flex-col items-center p-3 bg-background rounded-lg border">
       <span className="font-bold text-primary text-lg mb-1">{skinRequired.toString()}</span>
-      <span className="text-sm text-muted-foreground font-medium group-hover:underline hover:text-primary transition-colors cursor-pointer px-2 py-1 rounded">
+      <span className="text-sm text-muted-foreground font-medium hover:underline hover:text-primary transition-colors cursor-pointer px-2 py-1 rounded">
         $SKIN
       </span>
       <span className="text-xs bg-destructive/20 text-destructive px-2 py-1 rounded-full mt-2">
@@ -1248,15 +1242,9 @@ const connectWallet = async () => {
     </div>
     
     {/* BYEMONEY */}
-    <div className="flex flex-col items-center p-3 bg-background rounded-lg border cursor-pointer hover:shadow-md transition-all group" 
-         onClick={() => {
-           // Farcaster/Base App: открыть token page  
-           if (typeof window !== 'undefined') {
-             window.open(`https://miniapps.farcaster.xyz/${CONFIG.BYEMONEY_TOKEN}`, '_blank')
-           }
-         }}>
+    <div className="flex flex-col items-center p-3 bg-background rounded-lg border">
       <span className="font-bold text-primary text-lg mb-1">{byemoneyRequired.toString()}</span>
-      <span className="text-sm text-muted-foreground font-medium group-hover:underline hover:text-primary transition-colors cursor-pointer px-2 py-1 rounded">
+      <span className="text-sm text-muted-foreground font-medium hover:underline hover:text-primary transition-colors cursor-pointer px-2 py-1 rounded">
         $BYEMONEY
       </span>
       <span className="text-xs bg-primary/20 text-primary px-2 py-1 rounded-full mt-2">
