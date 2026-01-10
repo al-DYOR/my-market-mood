@@ -1,7 +1,6 @@
 "use client"
 
 import { OnchainKitProvider } from '@coinbase/onchainkit'
-import { useMiniKit } from '@coinbase/onchainkit/minikit'
 import { base } from 'viem/chains'
 import { useEffect } from 'react'
 import '@coinbase/onchainkit/styles.css'
