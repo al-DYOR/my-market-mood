@@ -59,7 +59,7 @@
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^1.1.2",
     "viem": "2.43.5",
-    "zod": "3.25.76"
+    "zod": "3.25.76",
     "@coinbase/onchainkit": "^0.20.0",
 "viem": "^2.21.0",
 "wagmi": "^2.12.0"
