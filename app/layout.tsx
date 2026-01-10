@@ -3,14 +3,14 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
-import { MiniKitWrapper } from "./MiniKitWrapper"
+import MiniKitWrapper from "./MiniKitWrapper"
 
 const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Daily Portfolio Spirit - Creative Developer & Designer",
-  description: "Portfolio showcasing creative development and design work with intention and spirit",
+  title: "Market Mood today",
+  description: "Your current state based on today's market and your on-chain identity",
   generator: "v0.app",
   icons: {
     icon: [
@@ -39,9 +39,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans antialiased`}>
-        <MiniKitWrapper>
-        {children}
-        </MiniKitWrapper>
+        <MiniKitWrapper />
+{children}
         <Analytics />
       </body>
     </html>
