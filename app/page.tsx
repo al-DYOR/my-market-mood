@@ -864,26 +864,28 @@ const connectWallet = async () => {
     setMintSuccess(null)
 
     try {
-      const skinBalance = await publicClient.readContract({
+      const skinBalanceRaw = await publicClient.readContract({
         address: CONFIG.SKIN_TOKEN as `0x${string}`,
         abi: ERC20_ABI,
         functionName: "balanceOf",
         args: [walletAddress as `0x${string}`],
-      })
+    }) as bigint
 
+      const skinBalance = skinBalanceRaw
       const skinRequired = CONFIG.SKIN_REQUIRED
 
-      console.log("SKIN RAW:", skinBalance.toString())
-      console.log("SKIN REQUIRED:", skinRequired.toString())
+        console.log("SKIN RAW:", skinBalance.toString())
+        console.log("SKIN REQUIRED:", skinRequired.toString())
 
-      const byemoneyBalance = await publicClient.readContract({
+      const byemoneyBalanceRaw = await publicClient.readContract({
         address: CONFIG.BYEMONEY_TOKEN as `0x${string}`,
         abi: ERC20_ABI,
         functionName: "balanceOf",
         args: [walletAddress as `0x${string}`],
-      })
+    }) as bigint
 
-      const byemoneyRequired = CONFIG.BYEMONEY_REQUIRED
+     const byemoneyBalance = byemoneyBalanceRaw
+     const byemoneyRequired = CONFIG.BYEMONEY_REQUIRED
 
       console.log("BYEMONEY RAW:", byemoneyBalance.toString())
       console.log("BYEMONEY REQUIRED:", byemoneyRequired.toString())
