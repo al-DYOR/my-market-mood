@@ -1,15 +1,10 @@
 "use client"
 
-import { useEffect } from 'react'
+import { sdk } from '@farcaster/miniapp-sdk'
 
-// ... твой текущий код компонента
-
-export default function Home() {
-  useEffect(() => {
-  if (window.parent !== window) {
-    window.parent.postMessage({ type: 'ready' }, '*')
-    console.log("Sent postMessage ready")
-  }
+useEffect(() => {
+  sdk.actions.ready().catch(err => console.error('Ready failed', err))
+  console.log("Called sdk.actions.ready()")
 }, [])
 
   // твой текущий UI (слайдеры, текст и т.д.) остаётся без изменений
