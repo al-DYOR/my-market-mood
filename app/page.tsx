@@ -1,5 +1,20 @@
 "use client"
 
+import { useEffect } from 'react'
+
+export default function Page() {
+  useEffect(() => {
+    if (window.parent !== window) {  // если в iframe/Mini App
+      window.parent.postMessage({ type: 'ready' }, '*')
+    }
+  }, [])
+
+  // твой текущий UI ниже
+  return (
+    // ...
+  )
+}
+
 import { useState, useEffect } from "react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
