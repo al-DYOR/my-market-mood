@@ -1,28 +1,19 @@
 "use client"
 
-import { OnchainKitProvider } from '@coinbase/onchainkit'
-import { base } from 'viem/chains'
-import { useEffect } from 'react'
-import '@coinbase/onchainkit/styles.css'
+import { useEffect } from "react"
+import { sdk } from "@farcaster/miniapp-sdk"
 
-export function MiniKitWrapper({ children }: { children: React.ReactNode }) {
-  const miniKit = useMiniKit()
+export default function MiniKitWrapper() {
+  useEffect(() => {
+    sdk.actions
+      .ready()
+      .then(() => {
+        console.log("[Farcaster] Mini App ready")
+      })
+      .catch((err) => {
+        console.error("[Farcaster] sdk.ready() failed", err)
+      })
+  }, [])
 
- useEffect(() => {
-  console.log("MiniKit useEffect triggered, isFrameReady:", miniKit?.isFrameReady)
-  if (miniKit && !miniKit.isFrameReady) {
-    console.log("Calling setFrameReady()")
-    miniKit.setFrameReady()
-  }
-}, [miniKit])
-
-  return (
-    <OnchainKitProvider
-      chain={base}
-      rpcUrl="https://mainnet.base.org"
-      miniKit={{ enabled: true }}
-    >
-      {children}
-    </OnchainKitProvider>
-  )
+  return null
 }
