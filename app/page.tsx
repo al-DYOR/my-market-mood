@@ -7,12 +7,6 @@ import { Slider } from "@/components/ui/slider"
 import { publicClient } from "@/lib/viem-client"
 import { CheckCircle2 } from "lucide-react"
 
-declare global {
-  interface Window {
-    ethereum?: any
-  }
-}
-
 const CONFIG = {
   SKIN_TOKEN: "0x7e994f015b60d97a26382ec5372039c89dd2eb07",
   SKIN_REQUIRED: BigInt("4164305") * BigInt("1000000000000000000"), // 4164305 * 10^18
