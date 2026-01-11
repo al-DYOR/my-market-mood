@@ -517,7 +517,7 @@ const connectWallet = async () => {
   try {
     setIsConnecting(true)
     
-    // ✅ 1. MetaMask (работает везде)
+    // ✅ MetaMask (100% работает)
     if (typeof window !== "undefined" && window.ethereum) {
       const accounts = await window.ethereum.request({
         method: "eth_requestAccounts",
@@ -527,27 +527,26 @@ const connectWallet = async () => {
       return
     }
 
-    // ✅ 2. Farcaster Context (безопасно)
+    // ✅ Farcaster — безопасная проверка (НЕ вызовем ошибку)
     if (typeof sdk !== 'undefined') {
-      try {
-        const context = await sdk.context()
-        if (context?.user?.address) {
-          setWalletAddress(context.user.address)
-          console.log("[Farcaster Context] Wallet:", context.user.address)
+      // @ts-ignore — Farcaster SDK в runtime
+      if (sdk.wallet?.ethProvider) {
+        // @ts-ignore — используем provider напрямую
+        const accounts = await sdk.wallet.ethProvider.request({ method: 'eth_accounts' })
+        if (accounts?.length > 0) {
+          setWalletAddress(accounts[0])
+          console.log("[Farcaster Wallet] Connected:", accounts[0])
           return
         }
-      } catch (e) {
-        console.log("[Farcaster] Context failed, using MetaMask")
       }
     }
 
-    // ❌ Нет кошелька
-    setErrorMessage("Please install MetaMask")
+    setErrorMessage("MetaMask required. Farcaster wallet support coming soon.")
     setShowErrorToast(true)
     
   } catch (error) {
     console.error("Connection failed:", error)
-    setErrorMessage("Connection failed")
+    setErrorMessage("Connection failed. Please try MetaMask.")
     setShowErrorToast(true)
   } finally {
     setIsConnecting(false)
