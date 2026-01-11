@@ -1250,7 +1250,7 @@ const byemoneyBalanceRaw = await publicClient.readContract({
         </span>
       </p>
 
-      {/* ✅ ТВОИ ОРИГИНАЛЬНЫЕ БЛОКИ + hover + Farcaster deep link */}
+     {/* ✅ ТВОИ ОРИГИНАЛЬНЫЕ БЛОКИ + hover + Farcaster deep link */}
 <div className="space-y-3">
   {/* SKIN */}
   <div className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
@@ -1299,40 +1299,40 @@ const byemoneyBalanceRaw = await publicClient.readContract({
   )}
 </div>
 
-    {/* ТВОЯ КНОПКА */}
-    <Button
-      onClick={mintNFT}
-      disabled={isMinting || !isEligible}
-      className="w-full h-14 text-base font-semibold shadow-lg shadow-accent/20 hover:shadow-xl hover:shadow-accent/30 transition-all bg-gradient-to-r from-accent to-primary hover:from-accent/90 hover:to-primary/90 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed"
-      size="lg"
-    >
-      {isMinting ? "Minting..." : "Mint NFT"}
-    </Button>
-    
-    {mintError && <p className="text-sm text-destructive text-center mt-3">{mintError}</p>}
-    {mintSuccess && <p className="text-sm text-success text-center mt-3">{mintSuccess}</p>}
+{/* ТВОЯ КНОПКА */}
+<Button
+  onClick={mintNFT}
+  disabled={isMinting || !isEligible}
+  className="w-full h-14 text-base font-semibold shadow-lg shadow-accent/20 hover:shadow-xl hover:shadow-accent/30 transition-all bg-gradient-to-r from-accent to-primary hover:from-accent/90 hover:to-primary/90 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed"
+  size="lg"
+>
+  {isMinting ? "Minting..." : "Mint NFT"}
+</Button>
 
-        {tokenURI && (
-          <Card className="p-6 shadow-2xl border border-accent/30 bg-gradient-to-br from-card via-card to-card/95 backdrop-blur-xl animate-in fade-in slide-in-from-bottom-4 duration-500 rounded-3xl">
-            <p className="text-sm font-medium text-muted-foreground text-center mb-4">
-              {tokenId ? "Minting Successful!" : "Token URI Generated:"}
-            </p>
-            {tokenId && <p className="text-lg font-semibold text-foreground text-center mb-3">Token ID: {tokenId}</p>}
-            <p className="text-xs font-medium text-muted-foreground text-center mb-2">Token URI:</p>
-            <p className="text-sm font-mono text-foreground bg-card/50 p-4 rounded-lg break-all text-center">
-              {tokenURI}
-            </p>
-          </Card>
-        )}
+{mintError && <p className="text-sm text-destructive text-center mt-3">{mintError}</p>}
+{mintSuccess && <p className="text-sm text-success text-center mt-3">{mintSuccess}</p>}
 
-        {nftMetadata && (
-          <Card className="p-6 shadow-2xl border border-accent/30 bg-gradient-to-br from-card via-card to-card/95 backdrop-blur-xl animate-in fade-in slide-in-from-bottom-4 duration-500 rounded-3xl">
-            <p className="text-sm font-medium text-muted-foreground text-center mb-4">NFT Metadata:</p>
-            <pre className="text-sm font-mono text-muted-foreground bg-card/50 p-4 rounded-lg overflow-auto">
-              {JSON.stringify(nftMetadata, null, 2)}
-            </pre>
-          </Card>
-        )}
-      </div>
+{tokenURI && (
+  <Card className="p-6 shadow-2xl border border-accent/30 bg-gradient-to-br from-card via-card to-card/95 backdrop-blur-xl animate-in fade-in slide-in-from-bottom-4 duration-500 rounded-3xl">
+    <p className="text-sm font-medium text-muted-foreground text-center mb-4">
+      {tokenId ? "Minting Successful!" : "Token URI Generated:"}
+    </p>
+    {tokenId && <p className="text-lg font-semibold text-foreground text-center mb-3">Token ID: {tokenId}</p>}
+    <p className="text-xs font-medium text-muted-foreground text-center mb-2">Token URI:</p>
+    <p className="text-sm font-mono text-foreground bg-card/50 p-4 rounded-lg break-all text-center">
+      {tokenURI}
+    </p>
+  </Card>
+)}
+
+{nftMetadata && (
+  <Card className="p-6 shadow-2xl border border-accent/30 bg-gradient-to-br from-card via-card to-card/95 backdrop-blur-xl animate-in fade-in slide-in-from-bottom-4 duration-500 rounded-3xl">
+    <p className="text-sm font-medium text-muted-foreground text-center mb-4">NFT Metadata:</p>
+    <pre className="text-sm font-mono text-muted-foreground bg-card/50 p-4 rounded-lg overflow-auto">
+      {JSON.stringify(nftMetadata, null, 2)}
+    </pre>
+  </Card>
+)}
+
     </div>
 }
