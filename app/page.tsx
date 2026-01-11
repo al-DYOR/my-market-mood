@@ -1224,45 +1224,42 @@ const connectWallet = async () => {
               <div className="p-6 bg-muted/50 rounded-xl border mb-6 space-y-4">
   <h3 className="text-xl font-bold text-center mb-4">Mint Requirements:</h3>
   
-  <div className="flex items-center justify-center gap-6 text-lg">
-    {/* SKIN — Farcaster/Base Token Page */}
-    <div className="flex flex-col items-center p-3 bg-background rounded-lg border hover:shadow-md transition-all cursor-pointer group" 
-         onClick={() => {
-           // Farcaster/Base App внутренние ссылки на токены
-           const tokenUrl = `farcaster://token/${CONFIG.SKIN_TOKEN}`
-           window.location.href = tokenUrl
-         }}>
-      <span className="font-bold text-primary text-lg mb-1">{skinRequired.toString()}</span>
-      <span className="text-sm text-muted-foreground font-medium group-hover:underline hover:text-primary transition-colors px-2 py-1 rounded">
-        $SKIN
-      </span>
-      <span className="text-xs bg-destructive/20 text-destructive px-2 py-1 rounded-full mt-2">
-        Burn to mint
-      </span>
-    </div>
-    
-    {/* OR */}
-    <div className="text-2xl font-bold text-destructive tracking-wider px-4 py-2 bg-destructive/10 rounded-lg">
-      OR
-    </div>
-    
-    {/* BYEMONEY — Farcaster/Base Token Page */}
-    <div className="flex flex-col items-center p-3 bg-background rounded-lg border hover:shadow-md transition-all cursor-pointer group" 
-         onClick={() => {
-           // Farcaster/Base App внутренние ссылки на токены
-           const tokenUrl = `farcaster://token/${CONFIG.BYEMONEY_TOKEN}`
-           window.location.href = tokenUrl
-         }}>
-      <span className="font-bold text-primary text-lg mb-1">{byemoneyRequired.toString()}</span>
-      <span className="text-sm text-muted-foreground font-medium group-hover:underline hover:text-primary transition-colors px-2 py-1 rounded">
-        $BYEMONEY
-      </span>
-      <span className="text-xs bg-primary/20 text-primary px-2 py-1 rounded-full mt-2">
-        Hold to mint ✓
-      </span>
+  <Card className="p-6 shadow-2xl border border-border/30 backdrop-blur-xl bg-gradient-to-br from-card via-card to-card/95 rounded-3xl">
+  <div className="mb-6 space-y-3">
+    <p className="text-sm font-medium text-muted-foreground text-center mb-1">Status: 
+      <span className={isEligible ? "text-green-500" : "text-destructive"}> {getEligibilityStatus()}</span>
+    </p>
+
+    {/* ✅ ЕДИНСТВЕННЫЙ БЛОК ТРЕБОВАНИЙ */}
+    <div className="flex items-center justify-center gap-8 p-6 bg-muted/50 rounded-xl border">
+      {/* SKIN */}
+      <div className="flex flex-col items-center p-4 bg-background rounded-lg border hover:shadow-md transition-all cursor-pointer group min-w-[100px]">
+        <span className="font-bold text-primary text-lg mb-2">{skinRequired.toString()}</span>
+        <span className="text-sm font-semibold text-muted-foreground group-hover:text-primary group-hover:underline transition-all px-2 py-1 rounded cursor-pointer">
+          $SKIN
+        </span>
+        <span className="text-xs bg-destructive/20 text-destructive px-2 py-1 rounded-full mt-2 whitespace-nowrap">
+          Burn to mint
+        </span>
+      </div>
+
+      {/* OR */}
+      <div className="text-3xl font-black text-destructive bg-destructive/10 px-6 py-4 rounded-xl shadow-lg">
+        OR
+      </div>
+
+      {/* BYEMONEY */}
+      <div className="flex flex-col items-center p-4 bg-background rounded-lg border hover:shadow-md transition-all cursor-pointer group min-w-[100px]">
+        <span className="font-bold text-primary text-lg mb-2">{byemoneyRequired.toString()}</span>
+        <span className="text-sm font-semibold text-muted-foreground group-hover:text-primary group-hover:underline transition-all px-2 py-1 rounded cursor-pointer">
+          $BYEMONEY
+        </span>
+        <span className="text-xs bg-primary/20 text-primary px-2 py-1 rounded-full mt-2 whitespace-nowrap">
+          Hold to mint {isEligible ? "✓" : ""}
+        </span>
+      </div>
     </div>
   </div>
-</div>
 
             <Button
               onClick={mintNFT}
