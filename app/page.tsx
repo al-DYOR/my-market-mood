@@ -868,26 +868,28 @@ const connectWallet = async () => {
     const skinBurnedFlag = typeof window !== 'undefined' && localStorage.getItem('hasBurnedSkin') === 'true'
 
     const skinBalanceRaw = await publicClient.readContract({
-       address: CONFIG.SKIN_TOKEN as `0x${string}`,
-       abi: ERC20_ABI,
-       functionName: "balanceOf",
-       args: [walletAddress as `0x${string}`],
-    }) as bigint
+  address: CONFIG.SKIN_TOKEN as `0x${string}`,
+  abi: ERC20_ABI,
+  functionName: "balanceOf",
+  args: [walletAddress as `0x${string}`],
+}) as bigint
 
-    const skinBalance = skinBalanceRaw
-    const skinRequired = CONFIG.SKIN_REQUIRED
+const skinBalance = skinBalanceRaw
+const skinRequired = CONFIG.SKIN_REQUIRED
 
-        console.log("SKIN RAW:", skinBalance.toString())
-        console.log("HAS BURNED SKIN:", hasBurnedSkin)
+// ✅ ПЕРЕМЕЩЁН ВВЕРХ — ДО console.log!
+const hasBurnedSkin = typeof window !== 'undefined' && localStorage.getItem('hasBurnedSkin') === 'true'
 
-        console.log("SKIN REQUIRED:", skinRequired.toString())
+console.log("SKIN RAW:", skinBalance.toString())
+console.log("HAS BURNED SKIN:", hasBurnedSkin)  // ✅ Теперь работает!
+console.log("SKIN REQUIRED:", skinRequired.toString())
 
-      const byemoneyBalanceRaw = await publicClient.readContract({
-        address: CONFIG.BYEMONEY_TOKEN as `0x${string}`,
-        abi: ERC20_ABI,
-        functionName: "balanceOf",
-        args: [walletAddress as `0x${string}`],
-    }) as bigint
+const byemoneyBalanceRaw = await publicClient.readContract({
+  address: CONFIG.BYEMONEY_TOKEN as `0x${string}`,
+  abi: ERC20_ABI,
+  functionName: "balanceOf",
+  args: [walletAddress as `0x${string}`],
+}) as bigint
 
      const byemoneyBalance = byemoneyBalanceRaw
      const byemoneyRequired = CONFIG.BYEMONEY_REQUIRED
