@@ -517,40 +517,33 @@ const connectWallet = async () => {
   try {
     setIsConnecting(true)
     
-    // ✅ Farcaster MiniApp — используем sdk.wallet
-    if (typeof sdk !== 'undefined' && sdk.wallet) {
-      const accounts = await sdk.wallet.getAccounts()
-      if (accounts.length > 0) {
-        setWalletAddress(accounts[0])
-        console.log("[Farcaster] Wallet connected:", accounts[0])
-        return
+    // ✅ Farcaster — используем sdk.actions.getWalletAddress
+    if (typeof sdk !== 'undefined' && sdk.actions?.getWalletAddress) {
+      try {
+        const address = await sdk.actions.getWalletAddress()
+        if (address) {
+          setWalletAddress(address)
+          console.log("[Farcaster] Native wallet:", address)
+          return
+        }
+      } catch (e) {
+        console.log("[Farcaster] getWalletAddress failed, trying MetaMask")
       }
     }
 
-    // ✅ Fallback для обычных браузеров (MetaMask)
+    // ✅ MetaMask fallback
     if (typeof window !== "undefined" && window.ethereum) {
       const accounts = await window.ethereum.request({
         method: "eth_requestAccounts",
       })
       setWalletAddress(accounts[0])
-      console.log("[MetaMask] CONNECTED:", accounts[0])
+      console.log("[MetaMask] Connected:", accounts[0])
       return
     }
 
-    // ✅ Farcaster без sdk.wallet — используем Warpcast/Base wallet
-    const farcasterAddress = await sdk.actions.getWalletAddress?.()
-    if (farcasterAddress) {
-      setWalletAddress(farcasterAddress)
-      console.log("[Farcaster Native] Wallet:", farcasterAddress)
-      return
-    }
-
-    // ❌ Последний fallback
-    alert("Wallet not detected. Please use Farcaster/Base app or MetaMask.")
-    
+    alert("Please use Farcaster/Base app or MetaMask")
   } catch (error) {
-    console.error("Wallet connection failed:", error)
-    alert("Please install MetaMask or use Farcaster/Base app")
+    console.error("Connection failed:", error)
   } finally {
     setIsConnecting(false)
   }
