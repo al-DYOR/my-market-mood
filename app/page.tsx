@@ -1212,67 +1212,86 @@ const connectWallet = async () => {
           </Card>
         )}
 
-        {walletAddress && (
-          <Card className="p-6 shadow-2xl border border-border/30 backdrop-blur-xl bg-gradient-to-br from-card via-card to-card/95 rounded-3xl">
-            <div className="mb-6 space-y-3">
-              <p className="text-sm font-medium text-muted-foreground text-center mb-1">Mint Requirements:</p>
-              <p className="text-base font-semibold text-center mb-4">
-                Status:{" "}
-                <span className={isEligible ? "text-green-500" : "text-destructive"}>{getEligibilityStatus()}</span>
-              </p>
-
-              <div className="p-6 bg-muted/50 rounded-xl border mb-6 space-y-4">
-  <h3 className="text-xl font-bold text-center mb-4">Mint Requirements:</h3>
-  
+       {walletAddress && (
   <Card className="p-6 shadow-2xl border border-border/30 backdrop-blur-xl bg-gradient-to-br from-card via-card to-card/95 rounded-3xl">
-  <div className="mb-6 space-y-3">
-    <p className="text-sm font-medium text-muted-foreground text-center mb-1">Status: 
-      <span className={isEligible ? "text-green-500" : "text-destructive"}> {getEligibilityStatus()}</span>
-    </p>
+    <div className="mb-6 space-y-3">
+      {/* ✅ Mint Requirements: ОСТАЁТСЯ */}
+      <p className="text-sm font-medium text-muted-foreground text-center mb-1">
+        Mint Requirements:
+      </p>
 
-    {/* ✅ ЕДИНСТВЕННЫЙ БЛОК ТРЕБОВАНИЙ */}
-    <div className="flex items-center justify-center gap-8 p-6 bg-muted/50 rounded-xl border">
-      {/* SKIN */}
-      <div className="flex flex-col items-center p-4 bg-background rounded-lg border hover:shadow-md transition-all cursor-pointer group min-w-[100px]">
-        <span className="font-bold text-primary text-lg mb-2">{skinRequired.toString()}</span>
-        <span className="text-sm font-semibold text-muted-foreground group-hover:text-primary group-hover:underline transition-all px-2 py-1 rounded cursor-pointer">
-          $SKIN
+      {/* ✅ Status ОСТАЁТСЯ */}
+      <p className="text-base font-semibold text-center mb-4">
+        Status:{" "}
+        <span className={isEligible ? "text-green-500" : "text-destructive"}>
+          {getEligibilityStatus()}
         </span>
-        <span className="text-xs bg-destructive/20 text-destructive px-2 py-1 rounded-full mt-2 whitespace-nowrap">
-          Burn to mint
-        </span>
-      </div>
+      </p>
 
-      {/* OR */}
-      <div className="text-3xl font-black text-destructive bg-destructive/10 px-6 py-4 rounded-xl shadow-lg">
-        OR
-      </div>
+      {/* ✅ ТВОИ ОРИГИНАЛЬНЫЕ БЛОКИ + hover */}
+      <div className="space-y-3">
+        {/* SKIN — твой оригинальный дизайн + hover */}
+        <div
+          className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
+            isSkinSatisfied
+              ? "border-green-500/50 bg-green-500/10"
+              : "border-border/30 bg-muted/20"
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <div
+              className="group cursor-pointer hover:scale-105 transition-all"
+              onClick={() => (window.location.href = `farcaster://token/${CONFIG.SKIN_TOKEN}`)}
+            >
+              <p className="text-sm font-semibold group-hover:underline group-hover:text-primary transition-colors">
+                $skin: {skinRequired.toString()}
+              </p>
+              <p className="text-xs text-muted-foreground">Burn to mint</p>
+            </div>
+            {isSkinSatisfied && <CheckCircle2 className="w-6 h-6 text-green-500" />}
+          </div>
+        </div>
 
-      {/* BYEMONEY */}
-      <div className="flex flex-col items-center p-4 bg-background rounded-lg border hover:shadow-md transition-all cursor-pointer group min-w-[100px]">
-        <span className="font-bold text-primary text-lg mb-2">{byemoneyRequired.toString()}</span>
-        <span className="text-sm font-semibold text-muted-foreground group-hover:text-primary group-hover:underline transition-all px-2 py-1 rounded cursor-pointer">
-          $BYEMONEY
-        </span>
-        <span className="text-xs bg-primary/20 text-primary px-2 py-1 rounded-full mt-2 whitespace-nowrap">
-          Hold to mint {isEligible ? "✓" : ""}
-        </span>
+        {/* BYEMONEY — твой оригинальный дизайн + hover */}
+        {!isSkinSatisfied && (
+          <div
+            className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
+              isByemoneySatisfied
+                ? "border-green-500/50 bg-green-500/10"
+                : "border-border/30 bg-muted/20"
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <div
+                className="group cursor-pointer hover:scale-105 transition-all"
+                onClick={() => (window.location.href = `farcaster://token/${CONFIG.BYEMONEY_TOKEN}`)}
+              >
+                <p className="text-sm font-semibold group-hover:underline group-hover:text-primary transition-colors">
+                  $byemoney: {byemoneyRequired.toString()}
+                </p>
+                <p className="text-xs text-muted-foreground">Hold to mint</p>
+              </div>
+              {isByemoneySatisfied && <CheckCircle2 className="w-6 h-6 text-green-500" />}
+            </div>
+          </div>
+        )}
       </div>
     </div>
-  </div>
 
-            <Button
-              onClick={mintNFT}
-              disabled={isMinting || !isEligible}
-              className="w-full h-14 text-base font-semibold shadow-lg shadow-accent/20 hover:shadow-xl hover:shadow-accent/30 transition-all bg-gradient-to-r from-accent to-primary hover:from-accent/90 hover:to-primary/90 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed"
-              size="lg"
-            >
-              {isMinting ? "Minting..." : "Mint NFT"}
-            </Button>
-            {mintError && <p className="text-sm text-destructive text-center mt-3">{mintError}</p>}
-            {mintSuccess && <p className="text-sm text-success text-center mt-3">{mintSuccess}</p>}
-          </Card>
-        )}
+    {/* ТВОЯ КНОПКА */}
+    <Button
+      onClick={mintNFT}
+      disabled={isMinting || !isEligible}
+      className="w-full h-14 text-base font-semibold shadow-lg shadow-accent/20 hover:shadow-xl hover:shadow-accent/30 transition-all bg-gradient-to-r from-accent to-primary hover:from-accent/90 hover:to-primary/90 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed"
+      size="lg"
+    >
+      {isMinting ? "Minting..." : "Mint NFT"}
+    </Button>
+    
+    {mintError && <p className="text-sm text-destructive text-center mt-3">{mintError}</p>}
+    {mintSuccess && <p className="text-sm text-success text-center mt-3">{mintSuccess}</p>}
+  </Card>
+)}
 
         {tokenURI && (
           <Card className="p-6 shadow-2xl border border-accent/30 bg-gradient-to-br from-card via-card to-card/95 backdrop-blur-xl animate-in fade-in slide-in-from-bottom-4 duration-500 rounded-3xl">
