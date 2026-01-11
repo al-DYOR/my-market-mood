@@ -1225,10 +1225,15 @@ const connectWallet = async () => {
   <h3 className="text-xl font-bold text-center mb-4">Mint Requirements:</h3>
   
   <div className="flex items-center justify-center gap-6 text-lg">
-    {/* SKIN */}
-    <div className="flex flex-col items-center p-3 bg-background rounded-lg border">
+    {/* SKIN — Farcaster/Base Token Page */}
+    <div className="flex flex-col items-center p-3 bg-background rounded-lg border hover:shadow-md transition-all cursor-pointer group" 
+         onClick={() => {
+           // Farcaster/Base App внутренние ссылки на токены
+           const tokenUrl = `farcaster://token/${CONFIG.SKIN_TOKEN}`
+           window.location.href = tokenUrl
+         }}>
       <span className="font-bold text-primary text-lg mb-1">{skinRequired.toString()}</span>
-      <span className="text-sm text-muted-foreground font-medium hover:underline hover:text-primary transition-colors cursor-pointer px-2 py-1 rounded">
+      <span className="text-sm text-muted-foreground font-medium group-hover:underline hover:text-primary transition-colors px-2 py-1 rounded">
         $SKIN
       </span>
       <span className="text-xs bg-destructive/20 text-destructive px-2 py-1 rounded-full mt-2">
@@ -1241,10 +1246,15 @@ const connectWallet = async () => {
       OR
     </div>
     
-    {/* BYEMONEY */}
-    <div className="flex flex-col items-center p-3 bg-background rounded-lg border">
+    {/* BYEMONEY — Farcaster/Base Token Page */}
+    <div className="flex flex-col items-center p-3 bg-background rounded-lg border hover:shadow-md transition-all cursor-pointer group" 
+         onClick={() => {
+           // Farcaster/Base App внутренние ссылки на токены
+           const tokenUrl = `farcaster://token/${CONFIG.BYEMONEY_TOKEN}`
+           window.location.href = tokenUrl
+         }}>
       <span className="font-bold text-primary text-lg mb-1">{byemoneyRequired.toString()}</span>
-      <span className="text-sm text-muted-foreground font-medium hover:underline hover:text-primary transition-colors cursor-pointer px-2 py-1 rounded">
+      <span className="text-sm text-muted-foreground font-medium group-hover:underline hover:text-primary transition-colors px-2 py-1 rounded">
         $BYEMONEY
       </span>
       <span className="text-xs bg-primary/20 text-primary px-2 py-1 rounded-full mt-2">
