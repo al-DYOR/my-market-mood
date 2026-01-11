@@ -489,6 +489,8 @@ export default function Home() {
   const [byemoneyBalance, setByemoneyBalance] = useState<bigint>(BigInt(0))
   const [showErrorToast, setShowErrorToast] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string>("")
+  const [skinRequired, setSkinRequired] = useState<bigint>(CONFIG.SKIN_REQUIRED)     // ✅ НОВОЕ
+  const [byemoneyRequired, setByemoneyRequired] = useState<bigint>(CONFIG.BYEMONEY_REQUIRED)  // ✅ НОВОЕ
 
     useEffect(() => {
     sdk.actions
@@ -780,6 +782,7 @@ const connectWallet = async () => {
         args: [walletAddress as `0x${string}`],
       })
       setSkinBalance(skinBal as bigint)
+      setSkinRequired(CONFIG.SKIN_REQUIRED)      // ✅ НОВОЕ
 
       const byemoneyBal = await publicClient.readContract({
         address: CONFIG.BYEMONEY_TOKEN as `0x${string}`,
@@ -788,6 +791,7 @@ const connectWallet = async () => {
         args: [walletAddress as `0x${string}`],
       })
       setByemoneyBalance(byemoneyBal as bigint)
+      setByemoneyRequired(CONFIG.BYEMONEY_REQUIRED)  // ✅ НОВОЕ
     } catch (error) {
       console.error("Error checking balances:", error)
     }
