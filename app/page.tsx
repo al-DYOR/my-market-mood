@@ -1253,26 +1253,18 @@ const byemoneyBalanceRaw = await publicClient.readContract({
       {/* ✅ ТВОИ ОРИГИНАЛЬНЫЕ БЛОКИ + hover + Farcaster deep link */}
 <div className="space-y-3">
   {/* SKIN */}
-  <div
-    className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
-      isSkinSatisfied
-        ? "border-green-500/50 bg-green-500/10"
-        : "border-border/30 bg-muted/20"
-    }`}
-  >
+  <div className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
+    isSkinSatisfied ? "border-green-500/50 bg-green-500/10" : "border-border/30 bg-muted/20"
+  }`}>
     <div className="flex items-center justify-between">
-      <div
-        className="group cursor-pointer hover:scale-105 transition-all"
-        onClick={() => {
-          // ✅ 1. Сворачиваем MiniApp
-          if (typeof sdk !== 'undefined') {
-            // @ts-ignore
-            sdk.minimize()
-          }
-          // ✅ 2. Открываем токен в Warpcast
-          window.location.href = `farcaster://token/${CONFIG.SKIN_TOKEN}`
-        }}
-      >
+      <div className="group cursor-pointer hover:scale-105 transition-all"
+           onClick={() => {
+             if (typeof sdk !== 'undefined') {
+               // @ts-ignore
+               sdk.minimize()
+             }
+             window.location.href = `farcaster://token/${CONFIG.SKIN_TOKEN}`
+           }}>
         <p className="text-sm font-semibold group-hover:underline group-hover:text-primary transition-colors">
           $skin: {skinRequired.toString()}
         </p>
@@ -1284,26 +1276,18 @@ const byemoneyBalanceRaw = await publicClient.readContract({
 
   {/* BYEMONEY */}
   {!isSkinSatisfied && (
-    <div
-      className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
-        isByemoneySatisfied
-          ? "border-green-500/50 bg-green-500/10"
-          : "border-border/30 bg-muted/20"
-      }`}
-    >
+    <div className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
+      isByemoneySatisfied ? "border-green-500/50 bg-green-500/10" : "border-border/30 bg-muted/20"
+    }`}>
       <div className="flex items-center justify-between">
-        <div
-          className="group cursor-pointer hover:scale-105 transition-all"
-          onClick={() => {
-            // ✅ 1. Сворачиваем MiniApp
-            if (typeof sdk !== 'undefined') {
-              // @ts-ignore
-              sdk.minimize()
-            }
-            // ✅ 2. Открываем токен в Warpcast
-            window.location.href = `farcaster://token/${CONFIG.BYEMONEY_TOKEN}`
-          }}
-        >
+        <div className="group cursor-pointer hover:scale-105 transition-all"
+             onClick={() => {
+               if (typeof sdk !== 'undefined') {
+                 // @ts-ignore
+                 sdk.minimize()
+               }
+               window.location.href = `farcaster://token/${CONFIG.BYEMONEY_TOKEN}`
+             }}>
           <p className="text-sm font-semibold group-hover:underline group-hover:text-primary transition-colors">
             $byemoney: {byemoneyRequired.toString()}
           </p>
