@@ -1250,55 +1250,70 @@ const byemoneyBalanceRaw = await publicClient.readContract({
         </span>
       </p>
 
-      {/* ✅ ТВОИ ОРИГИНАЛЬНЫЕ БЛОКИ + hover */}
-      <div className="space-y-3">
-        {/* SKIN — твой оригинальный дизайн + hover */}
-        <div
-          className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
-            isSkinSatisfied
-              ? "border-green-500/50 bg-green-500/10"
-              : "border-border/30 bg-muted/20"
-          }`}
-        >
-          <div className="flex items-center justify-between">
-            <div
-              className="group cursor-pointer hover:scale-105 transition-all"
-              onClick={() => window.open(`https://warpcast.com/~/token/${CONFIG.SKIN_TOKEN}`, '_blank')}
-            >
-              <p className="text-sm font-semibold group-hover:underline group-hover:text-primary transition-colors">
-                $skin: {skinRequired.toString()}
-              </p>
-              <p className="text-xs text-muted-foreground">Burn to mint</p>
-            </div>
-            {isSkinSatisfied && <CheckCircle2 className="w-6 h-6 text-green-500" />}
-          </div>
-        </div>
+      {/* ✅ ТВОИ ОРИГИНАЛЬНЫЕ БЛОКИ + hover + Farcaster deep link */}
+<div className="space-y-3">
+  {/* SKIN */}
+  <div
+    className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
+      isSkinSatisfied
+        ? "border-green-500/50 bg-green-500/10"
+        : "border-border/30 bg-muted/20"
+    }`}
+  >
+    <div className="flex items-center justify-between">
+      <div
+        className="group cursor-pointer hover:scale-105 transition-all"
+        onClick={() => {
+          // ✅ 1. Сворачиваем MiniApp
+          if (typeof sdk !== 'undefined') {
+            // @ts-ignore
+            sdk.minimize()
+          }
+          // ✅ 2. Открываем токен в Warpcast
+          window.location.href = `farcaster://token/${CONFIG.SKIN_TOKEN}`
+        }}
+      >
+        <p className="text-sm font-semibold group-hover:underline group-hover:text-primary transition-colors">
+          $skin: {skinRequired.toString()}
+        </p>
+        <p className="text-xs text-muted-foreground">Burn to mint</p>
+      </div>
+      {isSkinSatisfied && <CheckCircle2 className="w-6 h-6 text-green-500" />}
+    </div>
+  </div>
 
-        {/* BYEMONEY — твой оригинальный дизайн + hover */}
-        {!isSkinSatisfied && (
-          <div
-            className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
-              isByemoneySatisfied
-                ? "border-green-500/50 bg-green-500/10"
-                : "border-border/30 bg-muted/20"
-            }`}
-          >
-            <div className="flex items-center justify-between">
-              <div
-                className="group cursor-pointer hover:scale-105 transition-all"
-                onClick={() => window.open(`https://warpcast.com/~/token/${CONFIG.BYEMONEY_TOKEN}`, '_blank')}
-              >
-                <p className="text-sm font-semibold group-hover:underline group-hover:text-primary transition-colors">
-                  $byemoney: {byemoneyRequired.toString()}
-                </p>
-                <p className="text-xs text-muted-foreground">Hold to mint</p>
-              </div>
-              {isByemoneySatisfied && <CheckCircle2 className="w-6 h-6 text-green-500" />}
-            </div>
-          </div>
-        )}
+  {/* BYEMONEY */}
+  {!isSkinSatisfied && (
+    <div
+      className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
+        isByemoneySatisfied
+          ? "border-green-500/50 bg-green-500/10"
+          : "border-border/30 bg-muted/20"
+      }`}
+    >
+      <div className="flex items-center justify-between">
+        <div
+          className="group cursor-pointer hover:scale-105 transition-all"
+          onClick={() => {
+            // ✅ 1. Сворачиваем MiniApp
+            if (typeof sdk !== 'undefined') {
+              // @ts-ignore
+              sdk.minimize()
+            }
+            // ✅ 2. Открываем токен в Warpcast
+            window.location.href = `farcaster://token/${CONFIG.BYEMONEY_TOKEN}`
+          }}
+        >
+          <p className="text-sm font-semibold group-hover:underline group-hover:text-primary transition-colors">
+            $byemoney: {byemoneyRequired.toString()}
+          </p>
+          <p className="text-xs text-muted-foreground">Hold to mint</p>
+        </div>
+        {isByemoneySatisfied && <CheckCircle2 className="w-6 h-6 text-green-500" />}
       </div>
     </div>
+  )}
+</div>
 
     {/* ТВОЯ КНОПКА */}
     <Button
