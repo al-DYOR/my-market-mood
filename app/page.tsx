@@ -897,8 +897,6 @@ const byemoneyBalanceRaw = await publicClient.readContract({
       console.log("BYEMONEY RAW:", byemoneyBalance.toString())
       console.log("BYEMONEY REQUIRED:", byemoneyRequired.toString())
 
-     const hasBurnedSkin = typeof window !== 'undefined' && localStorage.getItem('hasBurnedSkin') === 'true'
-
      let mintPath: "Burn SKIN" | "Hold BYEMONEY"
 
      if (skinBurnedFlag || skinBalance >= skinRequired) {
