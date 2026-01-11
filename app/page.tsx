@@ -1335,5 +1335,4 @@ const byemoneyBalanceRaw = await publicClient.readContract({
         )}
       </div>
     </div>
-  )
 }
