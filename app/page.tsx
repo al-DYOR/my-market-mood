@@ -1263,7 +1263,7 @@ const byemoneyBalanceRaw = await publicClient.readContract({
           <div className="flex items-center justify-between">
             <div
               className="group cursor-pointer hover:scale-105 transition-all"
-              onClick={() => (window.open(`https://base.org/tokens/${CONFIG.SKIN_TOKEN}`, '_blank')}
+              onClick={() => window.open(`https://base.org/tokens/${CONFIG.SKIN_TOKEN}`, '_blank')}
             >
               <p className="text-sm font-semibold group-hover:underline group-hover:text-primary transition-colors">
                 $skin: {skinRequired.toString()}
@@ -1286,7 +1286,7 @@ const byemoneyBalanceRaw = await publicClient.readContract({
             <div className="flex items-center justify-between">
               <div
                 className="group cursor-pointer hover:scale-105 transition-all"
-                onClick={() => (window.open(`https://base.org/tokens/${CONFIG.BYEMONEY_TOKEN}`, '_blank')}
+                onClick={() => window.open(`https://base.org/tokens/${CONFIG.BYEMONEY_TOKEN}`, '_blank')}
               >
                 <p className="text-sm font-semibold group-hover:underline group-hover:text-primary transition-colors">
                   $byemoney: {byemoneyRequired.toString()}
