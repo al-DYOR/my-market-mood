@@ -1250,7 +1250,7 @@ const byemoneyBalanceRaw = await publicClient.readContract({
         </span>
       </p>
 
-     {/* ✅ ТВОИ ОРИГИНАЛЬНЫЕ БЛОКИ + hover + Farcaster deep link */}
+    {/* ✅ ТВОИ ОРИГИНАЛЬНЫЕ БЛОКИ + hover + Farcaster deep link */}
 <div className="space-y-3">
   {/* SKIN */}
   <div className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
@@ -1333,6 +1333,3 @@ const byemoneyBalanceRaw = await publicClient.readContract({
     </pre>
   </Card>
 )}
-
-    </div>
-}
