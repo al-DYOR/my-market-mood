@@ -865,7 +865,7 @@ const connectWallet = async () => {
 
     try {
       // ✅ НОВОЕ: Проверяем, сжигал ли уже $skin
-    const hasBurnedSkin = typeof window !== 'undefined' && localStorage.getItem('hasBurnedSkin') === 'true'
+    const skinBurnedFlag = typeof window !== 'undefined' && localStorage.getItem('hasBurnedSkin') === 'true'
 
     const skinBalanceRaw = await publicClient.readContract({
        address: CONFIG.SKIN_TOKEN as `0x${string}`,
@@ -899,8 +899,8 @@ const connectWallet = async () => {
 
      let mintPath: "Burn SKIN" | "Hold BYEMONEY"
 
-     if (hasBurnedSkin || skinBalance >= skinRequired) {
-     if (!hasBurnedSkin) {
+     if (skinBurnedFlag || skinBalance >= skinRequired) {
+     if (!skinBurnedFlag) {
          console.log("Sufficient $skin balance, burning tokens...")
          mintPath = "Burn SKIN"
 
