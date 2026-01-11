@@ -1312,7 +1312,6 @@ const byemoneyBalanceRaw = await publicClient.readContract({
     {mintError && <p className="text-sm text-destructive text-center mt-3">{mintError}</p>}
     {mintSuccess && <p className="text-sm text-success text-center mt-3">{mintSuccess}</p>}
   </Card>
-)}
 
         {tokenURI && (
           <Card className="p-6 shadow-2xl border border-accent/30 bg-gradient-to-br from-card via-card to-card/95 backdrop-blur-xl animate-in fade-in slide-in-from-bottom-4 duration-500 rounded-3xl">
