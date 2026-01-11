@@ -514,26 +514,47 @@ export default function Home() {
   }, [generatedName, sliders, farcasterPfp])
 
 const connectWallet = async () => {
-  if (typeof window === "undefined") return;
+  try {
+    setIsConnecting(true)
+    
+    // ✅ Farcaster MiniApp — используем sdk.wallet
+    if (typeof sdk !== 'undefined' && sdk.wallet) {
+      const accounts = await sdk.wallet.getAccounts()
+      if (accounts.length > 0) {
+        setWalletAddress(accounts[0])
+        console.log("[Farcaster] Wallet connected:", accounts[0])
+        return
+      }
+    }
 
-  if (typeof window.ethereum === "undefined") {
-    alert("Please install MetaMask to connect your wallet");
-    return;
-  }
-
-    try {
-      setIsConnecting(true)
+    // ✅ Fallback для обычных браузеров (MetaMask)
+    if (typeof window !== "undefined" && window.ethereum) {
       const accounts = await window.ethereum.request({
         method: "eth_requestAccounts",
       })
       setWalletAddress(accounts[0])
-      console.log("[v0] CONNECTED ADDRESS:", accounts[0])
-    } catch (error) {
-      console.error("Error connecting wallet:", error)
-    } finally {
-      setIsConnecting(false)
+      console.log("[MetaMask] CONNECTED:", accounts[0])
+      return
     }
+
+    // ✅ Farcaster без sdk.wallet — используем Warpcast/Base wallet
+    const farcasterAddress = await sdk.actions.getWalletAddress?.()
+    if (farcasterAddress) {
+      setWalletAddress(farcasterAddress)
+      console.log("[Farcaster Native] Wallet:", farcasterAddress)
+      return
+    }
+
+    // ❌ Последний fallback
+    alert("Wallet not detected. Please use Farcaster/Base app or MetaMask.")
+    
+  } catch (error) {
+    console.error("Wallet connection failed:", error)
+    alert("Please install MetaMask or use Farcaster/Base app")
+  } finally {
+    setIsConnecting(false)
   }
+}
 
   const disconnectWallet = () => {
     setWalletAddress(null)
