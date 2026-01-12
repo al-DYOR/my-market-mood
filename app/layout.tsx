@@ -28,23 +28,26 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-   <head>
-  <title>Market Mood today</title>
-  <meta name="description" content="Your current state based on today's market and your on-chain identity" />
+    <html lang="en">
+      <head>
+        <title>Market Mood today</title>
+        <meta name="description" content="Your current state based on today's market and your on-chain identity" />
 
-  <link rel="icon" href="/icon-512.png" type="image/png" sizes="512x512" />
-  <link rel="icon" href="/icon-512.png" type="image/png" />
-  <link rel="apple-touch-icon" href="/icon-512.png" sizes="512x512" />
-  <link rel="mask-icon" href="/icon-512.png" color="#000000" />
+        {/* Иконки */}
+        <link rel="icon" href="/icon-512.png" type="image/png" sizes="512x512" />
+        <link rel="icon" href="/icon-512.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/icon-512.png" sizes="512x512" />
+        <link rel="mask-icon" href="/icon-512.png" color="#000000" />
 
-  <meta name="theme-color" content="#000000" />
-  </head>
+        {/* Тема */}
+        <meta name="theme-color" content="#000000" />
+      </head>
 
-      <body className={`${_geist.className} ${_geistMono.variable} antialiased`}>
-  <MiniKitWrapper />
-  {children}
-  <Analytics />
-</body>
+      <body className={`${geist.className} ${geistMono.variable} antialiased`}>
+        <MiniKitWrapper />
+        {children}
+        <Analytics />
+      </body>
     </html>
   )
 }
