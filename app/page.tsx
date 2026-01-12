@@ -925,203 +925,189 @@ const connectWallet = async () => {
   }
 
   const mintNFT = async () => {
-    if (!walletAddress) {
-      setErrorMessage("Please connect your wallet first")
-      setShowErrorToast(true)
-      return
-    }
+  if (!walletAddress) {
+    setErrorMessage("Please connect your wallet first")
+    setShowErrorToast(true)
+    return
+  }
+  if (!generatedImage) {
+    setErrorMessage("Please generate today's state first")
+    setShowErrorToast(true)
+    return
+  }
+  setIsMinting(true)
+  setMintError(null)
+  setMintSuccess(null)
 
-    if (!generatedImage) {
-      setErrorMessage("Please generate today's state first")
-      setShowErrorToast(true)
-      return
-    }
-
-    setIsMinting(true)
-    setMintError(null)
-    setMintSuccess(null)
-
-    try {
-      // ✅ НОВОЕ: Проверяем, сжигал ли уже $skin
+  try {
+    // ✅ ТВОЯ логика проверки $skin и $byemoney — ОСТАЁТСЯ БЕЗ ИЗМЕНЕНИЙ
     const skinBurnedFlag = typeof window !== 'undefined' && localStorage.getItem('hasBurnedSkin') === 'true'
-
     const skinBalanceRaw = await publicClient.readContract({
-  address: CONFIG.SKIN_TOKEN as `0x${string}`,
-  abi: ERC20_ABI,
-  functionName: "balanceOf",
-  args: [walletAddress as `0x${string}`],
-}) as bigint
+      address: CONFIG.SKIN_TOKEN as `0x${string}`,
+      abi: ERC20_ABI,
+      functionName: "balanceOf",
+      args: [walletAddress as `0x${string}`],
+    }) as bigint
+    const skinBalance = skinBalanceRaw
+    const skinRequired = CONFIG.SKIN_REQUIRED
 
-const skinBalance = skinBalanceRaw
-const skinRequired = CONFIG.SKIN_REQUIRED
+    const hasBurnedSkin = typeof window !== 'undefined' && localStorage.getItem('hasBurnedSkin') === 'true'
+    console.log("SKIN RAW:", skinBalance.toString())
+    console.log("HAS BURNED SKIN:", hasBurnedSkin)
+    console.log("SKIN REQUIRED:", skinRequired.toString())
 
-// ✅ ПЕРЕМЕЩЁН ВВЕРХ — ДО console.log!
-const hasBurnedSkin = typeof window !== 'undefined' && localStorage.getItem('hasBurnedSkin') === 'true'
+    const byemoneyBalanceRaw = await publicClient.readContract({
+      address: CONFIG.BYEMONEY_TOKEN as `0x${string}`,
+      abi: ERC20_ABI,
+      functionName: "balanceOf",
+      args: [walletAddress as `0x${string}`],
+    }) as bigint
+    const byemoneyBalance = byemoneyBalanceRaw
+    const byemoneyRequired = CONFIG.BYEMONEY_REQUIRED
+    console.log("BYEMONEY RAW:", byemoneyBalance.toString())
+    console.log("BYEMONEY REQUIRED:", byemoneyRequired.toString())
 
-console.log("SKIN RAW:", skinBalance.toString())
-console.log("HAS BURNED SKIN:", hasBurnedSkin)  // ✅ Теперь работает!
-console.log("SKIN REQUIRED:", skinRequired.toString())
+    let mintPath: "Burn SKIN" | "Hold BYEMONEY"
+    let burnTxHash = null
 
-const byemoneyBalanceRaw = await publicClient.readContract({
-  address: CONFIG.BYEMONEY_TOKEN as `0x${string}`,
-  abi: ERC20_ABI,
-  functionName: "balanceOf",
-  args: [walletAddress as `0x${string}`],
-}) as bigint
+    if (skinBurnedFlag || skinBalance >= skinRequired) {
+      if (!skinBurnedFlag) {
+        console.log("Sufficient $skin balance, burning tokens...")
+        mintPath = "Burn SKIN"
+        const burnData = "0x42966c68" + skinRequired.toString(16).padStart(64, "0")
 
-     const byemoneyBalance = byemoneyBalanceRaw
-     const byemoneyRequired = CONFIG.BYEMONEY_REQUIRED
+        // ИЗМЕНЕНИЕ: выбираем провайдер (Farcaster или MetaMask)
+        const provider = (typeof sdk !== 'undefined' && sdk.wallet?.ethProvider) ? sdk.wallet.ethProvider : window.ethereum
+        if (!provider) throw new Error("No wallet provider available")
 
-      console.log("BYEMONEY RAW:", byemoneyBalance.toString())
-      console.log("BYEMONEY REQUIRED:", byemoneyRequired.toString())
-
-     let mintPath: "Burn SKIN" | "Hold BYEMONEY"
-
-     if (skinBurnedFlag || skinBalance >= skinRequired) {
-     if (!skinBurnedFlag) {
-         console.log("Sufficient $skin balance, burning tokens...")
-         mintPath = "Burn SKIN"
-
-     const burnData = "0x42966c68" + skinRequired.toString(16).padStart(64, "0")
-
-     const burnTxHash = await window.ethereum.request({
+        burnTxHash = await provider.request({
           method: "eth_sendTransaction",
           params: [{ from: walletAddress, to: CONFIG.SKIN_TOKEN, data: burnData }],
-    })
-
+        })
         console.log("$skin burn transaction sent:", burnTxHash)
 
         let burnReceipt = null
         let attempts = 0
         while (!burnReceipt && attempts < 30) {
           await new Promise((resolve) => setTimeout(resolve, 2000))
-          burnReceipt = await window.ethereum.request({
+          burnReceipt = await provider.request({
             method: "eth_getTransactionReceipt",
             params: [burnTxHash],
           })
           attempts++
         }
-
         if (!burnReceipt || burnReceipt.status !== "0x1") {
           throw new Error("$skin burn transaction failed")
         }
-
         console.log("$skin burned successfully, proceeding to mint...")
-       localStorage.setItem('hasBurnedSkin', 'true')  // 🔥 ТОЛЬКО ЭТУ СТРОКУ ДОБАВИТЬ
-         } else {
-    console.log("Already burned $skin previously, skipping burn...")
-    mintPath = "Burn SKIN"
-  }
-      } else if (byemoneyBalance >= byemoneyRequired) {
-        console.log("Sufficient $byemoney balance, proceeding to mint...")
-        mintPath = "Hold BYEMONEY"
+        localStorage.setItem('hasBurnedSkin', 'true')
       } else {
-        setErrorMessage("Insufficient tokens. Need 4164305 $skin or 1000000 $byemoney to mint.")
-        setShowErrorToast(true)
-        setIsMinting(false)
-        return
+        console.log("Already burned $skin previously, skipping burn...")
+        mintPath = "Burn SKIN"
       }
-
-      console.log("Uploading NFT metadata...")
-
-      console.log("Using pre-generated image:", generatedImage.substring(0, 50) + "...")
-
-      console.log("Uploading image to IPFS...")
-      const imageUploadResponse = await fetch("/api/upload-image", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imageDataUrl: generatedImage }),
-      })
-
-      const imageUploadResult = await imageUploadResponse.json()
-
-      if (!imageUploadResult.success) {
-        throw new Error("Failed to upload image to IPFS")
-      }
-
-      console.log("Image uploaded:", imageUploadResult.imageUrl)
-
-      const metadata = generateMetadata(imageUploadResult.imageUrl, mintPath)
-      setNftMetadata(metadata)
-      console.log("Metadata prepared:", metadata)
-
-      console.log("Uploading metadata to IPFS...")
-      const metadataUploadResponse = await fetch("/api/upload-metadata", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(metadata),
-      })
-      const metadataUploadResult = await metadataUploadResponse.json()
-
-      if (!metadataUploadResult.success) {
-        throw new Error("Failed to upload metadata to IPFS")
-      }
-
-      console.log("Metadata uploaded - TokenURI:", metadataUploadResult.tokenURI)
-      setTokenURI(metadataUploadResult.tokenURI)
-
-      console.log("Calling mintNFT on contract...")
-
-      const tokenURIHex = Buffer.from(metadataUploadResult.tokenURI).toString("hex")
-      const tokenURILength = (tokenURIHex.length / 2).toString(16).padStart(64, "0")
-      const tokenURIPadded = tokenURIHex.padEnd(Math.ceil(tokenURIHex.length / 64) * 64, "0")
-
-      const mintData =
-        "0xd204c45e" + // mintNFT(string) function selector
-        "0000000000000000000000000000000000000000000000000000000000000020" + // offset to string data
-        tokenURILength + // length of string
-        tokenURIPadded // actual string data
-
-      const txHash = await window.ethereum.request({
-        method: "eth_sendTransaction",
-        params: [
-          {
-            from: walletAddress,
-            to: CONFIG.NFT_CONTRACT,
-            data: mintData,
-            value: "0x0", // Not payable
-          },
-        ],
-      })
-
-      console.log("Mint transaction sent:", txHash)
-
-      let receipt = null
-      let attempts = 0
-      while (!receipt && attempts < 30) {
-        await new Promise((resolve) => setTimeout(resolve, 2000))
-        receipt = await window.ethereum.request({
-          method: "eth_getTransactionReceipt",
-          params: [txHash],
-        })
-        attempts++
-      }
-
-      if (receipt && receipt.logs && receipt.logs.length > 0) {
-        const transferLog = receipt.logs.find((log: any) => log.topics.length === 4)
-        if (transferLog) {
-          const extractedTokenId = BigInt(transferLog.topics[3]).toString()
-          setTokenId(extractedTokenId)
-          console.log("Minted tokenId:", extractedTokenId)
-        }
-      }
-
-      setMintError(null)
-      setMintSuccess("NFT minted successfully!")
-      console.log("Mint completed successfully!")
-      await checkTokenBalances()
-    } catch (error: any) {
-      console.error("Mint error:", error)
-      if (error.message?.includes("User rejected") || error.message?.includes("user rejected")) {
-        setErrorMessage("Transaction was cancelled")
-      } else {
-        setErrorMessage("Mint failed. Please try again.")
-      }
+    } else if (byemoneyBalance >= byemoneyRequired) {
+      console.log("Sufficient $byemoney balance, proceeding to mint...")
+      mintPath = "Hold BYEMONEY"
+    } else {
+      setErrorMessage("Insufficient tokens. Need 4164305 $skin or 1000000 $byemoney to mint.")
       setShowErrorToast(true)
-    } finally {
       setIsMinting(false)
+      return
     }
+
+    // Загрузка image и metadata — ТВОЙ КОД ОСТАЁТСЯ БЕЗ ИЗМЕНЕНИЙ
+    console.log("Uploading NFT metadata...")
+    console.log("Using pre-generated image:", generatedImage.substring(0, 50) + "...")
+    console.log("Uploading image to IPFS...")
+    const imageUploadResponse = await fetch("/api/upload-image", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ imageDataUrl: generatedImage }),
+    })
+    const imageUploadResult = await imageUploadResponse.json()
+    if (!imageUploadResult.success) {
+      throw new Error("Failed to upload image to IPFS")
+    }
+    console.log("Image uploaded:", imageUploadResult.imageUrl)
+
+    const metadata = generateMetadata(imageUploadResult.imageUrl, mintPath)
+    setNftMetadata(metadata)
+    console.log("Metadata prepared:", metadata)
+
+    console.log("Uploading metadata to IPFS...")
+    const metadataUploadResponse = await fetch("/api/upload-metadata", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(metadata),
+    })
+    const metadataUploadResult = await metadataUploadResponse.json()
+    if (!metadataUploadResult.success) {
+      throw new Error("Failed to upload metadata to IPFS")
+    }
+    console.log("Metadata uploaded - TokenURI:", metadataUploadResult.tokenURI)
+    setTokenURI(metadataUploadResult.tokenURI)
+
+    // Минт — ИЗМЕНЕНИЕ: используем тот же provider
+    console.log("Calling mintNFT on contract...")
+    const tokenURIHex = Buffer.from(metadataUploadResult.tokenURI).toString("hex")
+    const tokenURILength = (tokenURIHex.length / 2).toString(16).padStart(64, "0")
+    const tokenURIPadded = tokenURIHex.padEnd(Math.ceil(tokenURIHex.length / 64) * 64, "0")
+    const mintData =
+      "0xd204c45e" +
+      "0000000000000000000000000000000000000000000000000000000000000020" +
+      tokenURILength +
+      tokenURIPadded
+
+    const provider = (typeof sdk !== 'undefined' && sdk.wallet?.ethProvider) ? sdk.wallet.ethProvider : window.ethereum
+    if (!provider) throw new Error("No wallet provider available")
+
+    const txHash = await provider.request({
+      method: "eth_sendTransaction",
+      params: [{
+        from: walletAddress,
+        to: CONFIG.NFT_CONTRACT,
+        data: mintData,
+        value: "0x470de4df820000",
+      }],
+    })
+    console.log("Mint transaction sent:", txHash)
+
+    let receipt = null
+    let attempts = 0
+    while (!receipt && attempts < 30) {
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+      receipt = await provider.request({
+        method: "eth_getTransactionReceipt",
+        params: [txHash],
+      })
+      attempts++
+    }
+    if (!receipt) throw new Error("Transaction timeout")
+
+    if (receipt && receipt.logs && receipt.logs.length > 0) {
+      const transferLog = receipt.logs.find((log: any) => log.topics.length === 4)
+      if (transferLog) {
+        const extractedTokenId = BigInt(transferLog.topics[3]).toString()
+        setTokenId(extractedTokenId)
+        console.log("Minted tokenId:", extractedTokenId)
+      }
+    }
+
+    setMintSuccess("NFT minted successfully!")
+    console.log("Mint completed successfully!")
+    await checkTokenBalances()
+  } catch (error: any) {
+    console.error("Mint error:", error)
+    if (error.message?.includes("User rejected") || error.message?.includes("user rejected")) {
+      setErrorMessage("Transaction was cancelled")
+    } else {
+      setErrorMessage(error.message || "Mint failed. Please try again.")
+    }
+    setShowErrorToast(true)
+  } finally {
+    setIsMinting(false)
   }
+}
 
   const getDynamicTypographyStyle = () => {
     if (!result) return {}
