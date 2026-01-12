@@ -7,6 +7,62 @@ import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
 import { publicClient } from "@/lib/viem-client"
 import { CheckCircle2 } from "lucide-react"
+import { Copy, Check } from "lucide-react"
+
+function TokenLabel({
+  symbol,
+  amount,
+  address,
+  subtitle,
+}: {
+  symbol: string
+  amount: string
+  address: string
+  subtitle: string
+}) {
+  const [open, setOpen] = useState(false)
+  const [copied, setCopied] = useState(false)
+
+  const copy = async () => {
+    await navigator.clipboard.writeText(address)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 1200)
+  }
+
+  return (
+    <div className="relative inline-block">
+      <p
+        onClick={() => setOpen(v => !v)}
+        className="text-sm font-semibold cursor-pointer hover:text-primary hover:underline transition-colors"
+      >
+        ${symbol}: {amount}
+      </p>
+
+      <p className="text-xs text-muted-foreground">{subtitle}</p>
+
+      {open && (
+        <div className="absolute z-50 mt-2 w-72 rounded-xl border bg-background/95 backdrop-blur shadow-lg p-3 text-xs">
+          <p className="mb-2 text-muted-foreground">Contract address</p>
+
+          <div className="flex items-center justify-between gap-2 rounded-lg bg-muted/40 px-2 py-1">
+            <code className="truncate text-xs">{address}</code>
+
+            <button
+              onClick={copy}
+              className="text-primary hover:opacity-80"
+            >
+              {copied ? <Check size={14} /> : <Copy size={14} />}
+            </button>
+          </div>
+
+          {copied && (
+            <p className="mt-2 text-green-500 text-xs">Copied</p>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
 
 declare global {
   interface Window {
@@ -1253,6 +1309,9 @@ const byemoneyBalanceRaw = await publicClient.readContract({
     {/* ✅ ОРИГИНАЛЬНЫЕ БЛОКИ + hover + Farcaster openUrl (CORRECT) */}
 <div className="space-y-3">
   {/* SKIN */}
+  {/* ✅ ОРИГИНАЛЬНЫЕ БЛОКИ + hover + Farcaster openUrl (CORRECT) */}
+<div className="space-y-3">
+  {/* SKIN */}
   <div
     className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
       isSkinSatisfied
@@ -1269,9 +1328,12 @@ const byemoneyBalanceRaw = await publicClient.readContract({
           )
         }}
       >
-        <p className="text-sm font-semibold group-hover:underline group-hover:text-primary transition-colors">
-          $skin: {skinRequired.toString()}
-        </p>
+        <TokenLabel
+  symbol="skin"
+  amount={skinRequired.toString()}
+  address={CONFIG.SKIN_TOKEN}
+  subtitle="Burn to mint"
+/>
         <p className="text-xs text-muted-foreground">Burn to mint</p>
       </div>
 
@@ -1299,9 +1361,82 @@ const byemoneyBalanceRaw = await publicClient.readContract({
             )
           }}
         >
-          <p className="text-sm font-semibold group-hover:underline group-hover:text-primary transition-colors">
-            $byemoney: {byemoneyRequired.toString()}
-          </p>
+          <TokenLabel
+  symbol="byemoney"
+  amount={byemoneyRequired.toString()}
+  address={CONFIG.BYEMONEY_TOKEN}
+  subtitle="Hold to mint"
+/>
+          <p className="text-xs text-muted-foreground">Hold to mint</p>
+        </div>
+
+        {isByemoneySatisfied && (
+          <CheckCircle2 className="w-6 h-6 text-green-500" />
+        )}
+      </div>
+    </div>
+  )}
+</div>
+
+  {/* BYEMONEY */}
+  {/* ✅ ОРИГИНАЛЬНЫЕ БЛОКИ + hover + Farcaster openUrl (CORRECT) */}
+<div className="space-y-3">
+  {/* SKIN */}
+  <div
+    className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
+      isSkinSatisfied
+        ? "border-green-500/50 bg-green-500/10"
+        : "border-border/30 bg-muted/20"
+    }`}
+  >
+    <div className="flex items-center justify-between">
+      <div
+        className="group cursor-pointer hover:scale-105 transition-all"
+        onClick={() => {
+          sdk.actions.openUrl(
+            `https://warpcast.com/~/token/${CONFIG.SKIN_TOKEN}`
+          )
+        }}
+      >
+        <TokenLabel
+  symbol="skin"
+  amount={skinRequired.toString()}
+  address={CONFIG.SKIN_TOKEN}
+  subtitle="Burn to mint"
+/>
+        <p className="text-xs text-muted-foreground">Burn to mint</p>
+      </div>
+
+      {isSkinSatisfied && (
+        <CheckCircle2 className="w-6 h-6 text-green-500" />
+      )}
+    </div>
+  </div>
+
+  {/* BYEMONEY */}
+  {!isSkinSatisfied && (
+    <div
+      className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
+        isByemoneySatisfied
+          ? "border-green-500/50 bg-green-500/10"
+          : "border-border/30 bg-muted/20"
+      }`}
+    >
+      <div className="flex items-center justify-between">
+        <div
+          className="group cursor-pointer hover:scale-105 transition-all"
+          onClick={() => {
+            sdk.actions.openUrl(
+              `https://warpcast.com/~/token/${CONFIG.BYEMONEY_TOKEN}`
+            )
+          }}
+        >
+          <TokenLabel
+  symbol="byemoney"
+  amount={byemoneyRequired.toString()}
+  address={CONFIG.BYEMONEY_TOKEN}
+  subtitle="Hold to mint"
+/>
           <p className="text-xs text-muted-foreground">Hold to mint</p>
         </div>
 
