@@ -1290,202 +1290,126 @@ const byemoneyBalanceRaw = await publicClient.readContract({
           </Card>
         )}
 
-       {walletAddress && (
-  <Card className="p-6 shadow-2xl border border-border/30 backdrop-blur-xl bg-gradient-to-br from-card via-card to-card/95 rounded-3xl">
-    <div className="mb-6 space-y-3">
-      {/* ✅ Mint Requirements: ОСТАЁТСЯ */}
-      <p className="text-sm font-medium text-muted-foreground text-center mb-1">
-        Mint Requirements:
-      </p>
+             {walletAddress && (
+        <Card className="p-6 shadow-2xl border border-border/30 backdrop-blur-xl bg-gradient-to-br from-card via-card to-card/95 rounded-3xl">
+          <div className="mb-6 space-y-3">
+            {/* ✅ Mint Requirements: ОСТАЁТСЯ */}
+            <p className="text-sm font-medium text-muted-foreground text-center mb-1">
+              Mint Requirements:
+            </p>
+            {/* ✅ Status ОСТАЁТСЯ */}
+            <p className="text-base font-semibold text-center mb-4">
+              Status:{" "}
+              <span className={isEligible ? "text-green-500" : "text-destructive"}>
+                {getEligibilityStatus()}
+              </span>
+            </p>
 
-      {/* ✅ Status ОСТАЁТСЯ */}
-      <p className="text-base font-semibold text-center mb-4">
-        Status:{" "}
-        <span className={isEligible ? "text-green-500" : "text-destructive"}>
-          {getEligibilityStatus()}
-        </span>
-      </p>
+            {/* ✅ ОРИГИНАЛЬНЫЕ БЛОКИ + hover + Farcaster openUrl (CORRECT) */}
+            <div className="space-y-3">
+              {/* SKIN */}
+              <div
+                className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
+                  isSkinSatisfied
+                    ? "border-green-500/50 bg-green-500/10"
+                    : "border-border/30 bg-muted/20"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div
+                    className="group cursor-pointer hover:scale-105 transition-all"
+                    onClick={() => {
+                      sdk.actions.openUrl(
+                        `https://warpcast.com/~/token/${CONFIG.SKIN_TOKEN}`
+                      )
+                    }}
+                  >
+                    <TokenLabel
+                      symbol="skin"
+                      amount={skinRequired.toString()}
+                      address={CONFIG.SKIN_TOKEN}
+                      subtitle="Burn to mint"
+                    />
+                    <p className="text-xs text-muted-foreground">Burn to mint</p>
+                  </div>
+                  {isSkinSatisfied && (
+                    <CheckCircle2 className="w-6 h-6 text-green-500" />
+                  )}
+                </div>
+              </div>
 
-    {/* ✅ ОРИГИНАЛЬНЫЕ БЛОКИ + hover + Farcaster openUrl (CORRECT) */}
-<div className="space-y-3">
-  {/* SKIN */}
-  {/* ✅ ОРИГИНАЛЬНЫЕ БЛОКИ + hover + Farcaster openUrl (CORRECT) */}
-<div className="space-y-3">
-  {/* SKIN */}
-  <div
-    className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
-      isSkinSatisfied
-        ? "border-green-500/50 bg-green-500/10"
-        : "border-border/30 bg-muted/20"
-    }`}
-  >
-    <div className="flex items-center justify-between">
-      <div
-        className="group cursor-pointer hover:scale-105 transition-all"
-        onClick={() => {
-          sdk.actions.openUrl(
-            `https://warpcast.com/~/token/${CONFIG.SKIN_TOKEN}`
-          )
-        }}
-      >
-        <TokenLabel
-  symbol="skin"
-  amount={skinRequired.toString()}
-  address={CONFIG.SKIN_TOKEN}
-  subtitle="Burn to mint"
-/>
-        <p className="text-xs text-muted-foreground">Burn to mint</p>
-      </div>
+              {/* BYEMONEY */}
+              {!isSkinSatisfied && (
+                <div
+                  className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
+                    isByemoneySatisfied
+                      ? "border-green-500/50 bg-green-500/10"
+                      : "border-border/30 bg-muted/20"
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div
+                      className="group cursor-pointer hover:scale-105 transition-all"
+                      onClick={() => {
+                        sdk.actions.openUrl(
+                          `https://warpcast.com/~/token/${CONFIG.BYEMONEY_TOKEN}`
+                        )
+                      }}
+                    >
+                      <TokenLabel
+                        symbol="byemoney"
+                        amount={byemoneyRequired.toString()}
+                        address={CONFIG.BYEMONEY_TOKEN}
+                        subtitle="Hold to mint"
+                      />
+                      <p className="text-xs text-muted-foreground">Hold to mint</p>
+                    </div>
+                    {isByemoneySatisfied && (
+                      <CheckCircle2 className="w-6 h-6 text-green-500" />
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
 
-      {isSkinSatisfied && (
-        <CheckCircle2 className="w-6 h-6 text-green-500" />
-      )}
-    </div>
-  </div>
+            {/* ТВОЯ КНОПКА */}
+            <Button
+              onClick={mintNFT}
+              disabled={isMinting || !isEligible}
+              className="w-full h-14 text-base font-semibold shadow-lg shadow-accent/20 hover:shadow-xl hover:shadow-accent/30 transition-all bg-gradient-to-r from-accent to-primary hover:from-accent/90 hover:to-primary/90 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed"
+              size="lg"
+            >
+              {isMinting ? "Minting..." : "Mint NFT"}
+            </Button>
 
-  {/* BYEMONEY */}
-  {!isSkinSatisfied && (
-    <div
-      className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
-        isByemoneySatisfied
-          ? "border-green-500/50 bg-green-500/10"
-          : "border-border/30 bg-muted/20"
-      }`}
-    >
-      <div className="flex items-center justify-between">
-        <div
-          className="group cursor-pointer hover:scale-105 transition-all"
-          onClick={() => {
-            sdk.actions.openUrl(
-              `https://warpcast.com/~/token/${CONFIG.BYEMONEY_TOKEN}`
-            )
-          }}
-        >
-          <TokenLabel
-  symbol="byemoney"
-  amount={byemoneyRequired.toString()}
-  address={CONFIG.BYEMONEY_TOKEN}
-  subtitle="Hold to mint"
-/>
-          <p className="text-xs text-muted-foreground">Hold to mint</p>
-        </div>
+            {mintError && <p className="text-sm text-destructive text-center mt-3">{mintError}</p>}
+            {mintSuccess && <p className="text-sm text-success text-center mt-3">{mintSuccess}</p>}
 
-        {isByemoneySatisfied && (
-          <CheckCircle2 className="w-6 h-6 text-green-500" />
-        )}
-      </div>
-    </div>
-  )}
-</div>
+            {tokenURI && (
+              <Card className="p-6 shadow-2xl border border-accent/30 bg-gradient-to-br from-card via-card to-card/95 backdrop-blur-xl animate-in fade-in slide-in-from-bottom-4 duration-500 rounded-3xl">
+                <p className="text-sm font-medium text-muted-foreground text-center mb-4">
+                  {tokenId ? "Minting Successful!" : "Token URI Generated:"}
+                </p>
+                {tokenId && <p className="text-lg font-semibold text-foreground text-center mb-3">Token ID: {tokenId}</p>}
+                <p className="text-xs font-medium text-muted-foreground text-center mb-2">Token URI:</p>
+                <p className="text-sm font-mono text-foreground bg-card/50 p-4 rounded-lg break-all text-center">
+                  {tokenURI}
+                </p>
+              </Card>
+            )}
 
-  {/* BYEMONEY */}
-  {/* ✅ ОРИГИНАЛЬНЫЕ БЛОКИ + hover + Farcaster openUrl (CORRECT) */}
-<div className="space-y-3">
-  {/* SKIN */}
-  <div
-    className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
-      isSkinSatisfied
-        ? "border-green-500/50 bg-green-500/10"
-        : "border-border/30 bg-muted/20"
-    }`}
-  >
-    <div className="flex items-center justify-between">
-      <div
-        className="group cursor-pointer hover:scale-105 transition-all"
-        onClick={() => {
-          sdk.actions.openUrl(
-            `https://warpcast.com/~/token/${CONFIG.SKIN_TOKEN}`
-          )
-        }}
-      >
-        <TokenLabel
-  symbol="skin"
-  amount={skinRequired.toString()}
-  address={CONFIG.SKIN_TOKEN}
-  subtitle="Burn to mint"
-/>
-        <p className="text-xs text-muted-foreground">Burn to mint</p>
-      </div>
-
-      {isSkinSatisfied && (
-        <CheckCircle2 className="w-6 h-6 text-green-500" />
-      )}
-    </div>
-  </div>
-
-  {/* BYEMONEY */}
-  {!isSkinSatisfied && (
-    <div
-      className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
-        isByemoneySatisfied
-          ? "border-green-500/50 bg-green-500/10"
-          : "border-border/30 bg-muted/20"
-      }`}
-    >
-      <div className="flex items-center justify-between">
-        <div
-          className="group cursor-pointer hover:scale-105 transition-all"
-          onClick={() => {
-            sdk.actions.openUrl(
-              `https://warpcast.com/~/token/${CONFIG.BYEMONEY_TOKEN}`
-            )
-          }}
-        >
-          <TokenLabel
-  symbol="byemoney"
-  amount={byemoneyRequired.toString()}
-  address={CONFIG.BYEMONEY_TOKEN}
-  subtitle="Hold to mint"
-/>
-          <p className="text-xs text-muted-foreground">Hold to mint</p>
-        </div>
-
-        {isByemoneySatisfied && (
-          <CheckCircle2 className="w-6 h-6 text-green-500" />
-        )}
-      </div>
-    </div>
-  )}
-</div>
-
-{/* ТВОЯ КНОПКА */}
-<Button
-  onClick={mintNFT}
-  disabled={isMinting || !isEligible}
-  className="w-full h-14 text-base font-semibold shadow-lg shadow-accent/20 hover:shadow-xl hover:shadow-accent/30 transition-all bg-gradient-to-r from-accent to-primary hover:from-accent/90 hover:to-primary/90 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed"
-  size="lg"
->
-  {isMinting ? "Minting..." : "Mint NFT"}
-</Button>
-
-{mintError && <p className="text-sm text-destructive text-center mt-3">{mintError}</p>}
-{mintSuccess && <p className="text-sm text-success text-center mt-3">{mintSuccess}</p>}
-
-{tokenURI && (
-  <Card className="p-6 shadow-2xl border border-accent/30 bg-gradient-to-br from-card via-card to-card/95 backdrop-blur-xl animate-in fade-in slide-in-from-bottom-4 duration-500 rounded-3xl">
-    <p className="text-sm font-medium text-muted-foreground text-center mb-4">
-      {tokenId ? "Minting Successful!" : "Token URI Generated:"}
-    </p>
-    {tokenId && <p className="text-lg font-semibold text-foreground text-center mb-3">Token ID: {tokenId}</p>}
-    <p className="text-xs font-medium text-muted-foreground text-center mb-2">Token URI:</p>
-    <p className="text-sm font-mono text-foreground bg-card/50 p-4 rounded-lg break-all text-center">
-      {tokenURI}
-    </p>
-  </Card>
-)}
-
-          {nftMetadata && (
-            <Card className="p-6 shadow-2xl border border-accent/30 bg-gradient-to-br from-card via-card to-card/95 backdrop-blur-xl animate-in fade-in slide-in-from-bottom-4 duration-500 rounded-3xl">
-              <p className="text-sm font-medium text-muted-foreground text-center mb-4">NFT Metadata:</p>
-              <pre className="text-sm font-mono text-muted-foreground bg-card/50 p-4 rounded-lg overflow-auto">
-                {JSON.stringify(nftMetadata, null, 2)}
-             </pre>
+            {nftMetadata && (
+              <Card className="p-6 shadow-2xl border border-accent/30 bg-gradient-to-br from-card via-card to-card/95 backdrop-blur-xl animate-in fade-in slide-in-from-bottom-4 duration-500 rounded-3xl">
+                <p className="text-sm font-medium text-muted-foreground text-center mb-4">NFT Metadata:</p>
+                <pre className="text-sm font-mono text-muted-foreground bg-card/50 p-4 rounded-lg overflow-auto">
+                  {JSON.stringify(nftMetadata, null, 2)}
+                </pre>
               </Card>
             )}
           </div>
         </Card>
       )}
-    </div>
-  </div>
+    </div>   {/* закрывает w-full max-w-lg */}
+  </div>     {/* закрывает min-h-screen */}
 )
 }
