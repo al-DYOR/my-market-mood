@@ -10,7 +10,8 @@ export async function GET() {
     },
     miniapp: {
       version: "1",
-      name: "Market Mood",
+      name: "Market Mood today",
+      short_name: "Market Mood",
       description: "Your current state based on today's market and on-chain identity",
       homeUrl: "https://v0-mymarketmood.vercel.app/",
       iconUrl: "https://v0-mymarketmood.vercel.app/icon-512.png",
