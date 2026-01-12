@@ -1406,7 +1406,10 @@ const byemoneyBalanceRaw = await publicClient.readContract({
                </pre>
              </Card>
            )}
-        </div>
-      </div>     // ← закрывает min-h-screen (№1) — только одна!
-    )
-  }
+          </div>
+        </Card>
+      )}
+    </div>
+  </div>
+)
+}
