@@ -6,10 +6,10 @@
   },
   "frame": {
     "version": "1",
-    "name": "Example Frame",
-    "iconUrl": "https://v0-mymarketmood.vercel.app/icon.png",
+    "name": "Market Mood Today",
+    "iconUrl": "https://v0-mymarketmood.vercel.app/icon-512.png",
     "homeUrl": "https://v0-mymarketmood.vercel.app",
-    "imageUrl": "https://v0-mymarketmood.vercel.app/image.png",
+    "imageUrl": "https://v0-mymarketmood.vercel.app/icon-512.png",
     "buttonTitle": "Check this out",
     "splashImageUrl": "https://v0-mymarketmood.vercel.app/splash.png",
     "splashBackgroundColor": "#eeccff",
