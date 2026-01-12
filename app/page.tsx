@@ -29,11 +29,6 @@ function TokenLabel({
     setTimeout(() => setCopied(false), 1200)
   }
 
-  const formatBigInt = (value: bigint): string => {
-  const formatted = Number(value) / 1e18;
-  return formatted.toLocaleString('en-US', { maximumFractionDigits: 0 });
-};
-
   return (
     <div className="relative inline-block">
       <p
@@ -1142,6 +1137,11 @@ const byemoneyBalanceRaw = await publicClient.readContract({
       animation: isChaotic ? "subtleJitter 3s ease-in-out infinite" : "none",
     }
   }
+  
+    const formatBigInt = (value: bigint): string => {
+    const formatted = Number(value) / 1e18;
+    return formatted.toLocaleString('en-US', { maximumFractionDigits: 0 });
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5 p-4">
