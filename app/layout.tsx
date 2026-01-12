@@ -38,9 +38,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        {/* для лучшей совместимости */}
+        <meta name="theme-color" content="#000000" />
+      </head>
       <body className={`font-sans antialiased`}>
         <MiniKitWrapper />
-{children}
+        {children}
         <Analytics />
       </body>
     </html>
