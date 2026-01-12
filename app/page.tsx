@@ -1482,9 +1482,9 @@ const byemoneyBalanceRaw = await publicClient.readContract({
               </pre>
             </Card>
           )}
-        </div>   // ← закрывает Card (если есть)
-      </div>     // ← закрывает w-full max-w-lg
-    </div>       // ← закрывает fixed inset-0 (grain overlay)
-  </div>         // ← закрывает самый внешний min-h-screen — ЭТО САМОЕ ВАЖНОЕ
+        </div>
+      </div>
+    </div>
+  </div>
 )
 }
