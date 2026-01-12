@@ -29,23 +29,22 @@ export default function RootLayout({
 }>) {
   return (
    <head>
-  {/* Основное название и описание */}
   <title>Market Mood today</title>
   <meta name="description" content="Your current state based on today's market and your on-chain identity" />
 
   <link rel="icon" href="/icon-512.png" type="image/png" sizes="512x512" />
-  <link rel="icon" href="/icon-512.png" type="image/png" /> {/* fallback для старых браузеров */}
+  <link rel="icon" href="/icon-512.png" type="image/png" />
   <link rel="apple-touch-icon" href="/icon-512.png" sizes="512x512" />
-  <link rel="mask-icon" href="/icon-512.png" color="#000000" /> {/* для Safari */}
+  <link rel="mask-icon" href="/icon-512.png" color="#000000" />
 
   <meta name="theme-color" content="#000000" />
-</head>
+  </head>
 
-      <body className={`${geist.className} ${geistMono.variable} antialiased`}>
-        <MiniKitWrapper />
-        {children}
-        <Analytics />
-      </body>
+      <body className={`${_geist.className} ${_geistMono.variable} antialiased`}>
+  <MiniKitWrapper />
+  {children}
+  <Analytics />
+</body>
     </html>
   )
 }
