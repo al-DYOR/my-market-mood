@@ -1398,18 +1398,15 @@ const byemoneyBalanceRaw = await publicClient.readContract({
               </Card>
             )}
 
-            {nftMetadata && (
-              <Card className="p-6 shadow-2xl border border-accent/30 bg-gradient-to-br from-card via-card to-card/95 backdrop-blur-xl animate-in fade-in slide-in-from-bottom-4 duration-500 rounded-3xl">
-                <p className="text-sm font-medium text-muted-foreground text-center mb-4">NFT Metadata:</p>
-                <pre className="text-sm font-mono text-muted-foreground bg-card/50 p-4 rounded-lg overflow-auto">
-                  {JSON.stringify(nftMetadata, null, 2)}
-                </pre>
-              </Card>
-            )}
-          </div>
-        </Card>
-      )}
-    </div>   {/* закрывает w-full max-w-lg */}
-  </div>     {/* закрывает min-h-screen */}
-)
-}
+                      {nftMetadata && (
+            <Card className="p-6 shadow-2xl border border-accent/30 bg-gradient-to-br from-card via-card to-card/95 backdrop-blur-xl animate-in fade-in slide-in-from-bottom-4 duration-500 rounded-3xl">
+              <p className="text-sm font-medium text-muted-foreground text-center mb-4">NFT Metadata:</p>
+              <pre className="text-sm font-mono text-muted-foreground bg-card/50 p-4 rounded-lg overflow-auto">
+                {JSON.stringify(nftMetadata, null, 2)}
+              </pre>
+            </Card>
+          )}
+        </div>   {/* закрывает w-full max-w-lg */}
+      </div>     {/* закрывает min-h-screen */}
+    )
+  }
