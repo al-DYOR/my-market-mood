@@ -1290,14 +1290,12 @@ const byemoneyBalanceRaw = await publicClient.readContract({
           </Card>
         )}
 
-             {walletAddress && (
+                   {walletAddress && (
         <Card className="p-6 shadow-2xl border border-border/30 backdrop-blur-xl bg-gradient-to-br from-card via-card to-card/95 rounded-3xl">
           <div className="mb-6 space-y-3">
-            {/* ✅ Mint Requirements: ОСТАЁТСЯ */}
             <p className="text-sm font-medium text-muted-foreground text-center mb-1">
               Mint Requirements:
             </p>
-            {/* ✅ Status ОСТАЁТСЯ */}
             <p className="text-base font-semibold text-center mb-4">
               Status:{" "}
               <span className={isEligible ? "text-green-500" : "text-destructive"}>
@@ -1305,23 +1303,18 @@ const byemoneyBalanceRaw = await publicClient.readContract({
               </span>
             </p>
 
-            {/* ✅ ОРИГИНАЛЬНЫЕ БЛОКИ + hover + Farcaster openUrl (CORRECT) */}
             <div className="space-y-3">
               {/* SKIN */}
               <div
                 className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
-                  isSkinSatisfied
-                    ? "border-green-500/50 bg-green-500/10"
-                    : "border-border/30 bg-muted/20"
+                  isSkinSatisfied ? "border-green-500/50 bg-green-500/10" : "border-border/30 bg-muted/20"
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <div
                     className="group cursor-pointer hover:scale-105 transition-all"
                     onClick={() => {
-                      sdk.actions.openUrl(
-                        `https://warpcast.com/~/token/${CONFIG.SKIN_TOKEN}`
-                      )
+                      sdk.actions.openUrl(`https://warpcast.com/~/token/${CONFIG.SKIN_TOKEN}`)
                     }}
                   >
                     <TokenLabel
@@ -1330,30 +1323,23 @@ const byemoneyBalanceRaw = await publicClient.readContract({
                       address={CONFIG.SKIN_TOKEN}
                       subtitle="Burn to mint"
                     />
-                    <p className="text-xs text-muted-foreground">Burn to mint</p>
                   </div>
-                  {isSkinSatisfied && (
-                    <CheckCircle2 className="w-6 h-6 text-green-500" />
-                  )}
+                  {isSkinSatisfied && <CheckCircle2 className="w-6 h-6 text-green-500" />}
                 </div>
               </div>
 
-              {/* BYEMONEY */}
+              {/* BYEMONEY — только если $skin НЕ достаточно */}
               {!isSkinSatisfied && (
                 <div
                   className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
-                    isByemoneySatisfied
-                      ? "border-green-500/50 bg-green-500/10"
-                      : "border-border/30 bg-muted/20"
+                    isByemoneySatisfied ? "border-green-500/50 bg-green-500/10" : "border-border/30 bg-muted/20"
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <div
                       className="group cursor-pointer hover:scale-105 transition-all"
                       onClick={() => {
-                        sdk.actions.openUrl(
-                          `https://warpcast.com/~/token/${CONFIG.BYEMONEY_TOKEN}`
-                        )
+                        sdk.actions.openUrl(`https://warpcast.com/~/token/${CONFIG.BYEMONEY_TOKEN}`)
                       }}
                     >
                       <TokenLabel
@@ -1362,17 +1348,13 @@ const byemoneyBalanceRaw = await publicClient.readContract({
                         address={CONFIG.BYEMONEY_TOKEN}
                         subtitle="Hold to mint"
                       />
-                      <p className="text-xs text-muted-foreground">Hold to mint</p>
                     </div>
-                    {isByemoneySatisfied && (
-                      <CheckCircle2 className="w-6 h-6 text-green-500" />
-                    )}
+                    {isByemoneySatisfied && <CheckCircle2 className="w-6 h-6 text-green-500" />}
                   </div>
                 </div>
               )}
             </div>
 
-            {/* ТВОЯ КНОПКА */}
             <Button
               onClick={mintNFT}
               disabled={isMinting || !isEligible}
