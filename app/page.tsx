@@ -1406,7 +1406,7 @@ const byemoneyBalanceRaw = await publicClient.readContract({
                </pre>
              </Card>
            )}
-         </div>   {/* закрывает w-full max-w-lg */}
-       </div>     {/* закрывает min-h-screen */}
+         </div>
+       </div>
      )
    }
