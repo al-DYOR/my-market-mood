@@ -29,6 +29,11 @@ function TokenLabel({
     setTimeout(() => setCopied(false), 1200)
   }
 
+  const formatBigInt = (value: bigint): string => {
+  const formatted = Number(value) / 1e18;
+  return formatted.toLocaleString('en-US', { maximumFractionDigits: 0 });
+};
+
   return (
     <div className="relative inline-block">
       <p
@@ -1304,56 +1309,52 @@ const byemoneyBalanceRaw = await publicClient.readContract({
             </p>
 
             <div className="space-y-3">
-              {/* SKIN */}
-              <div
-                className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
-                  isSkinSatisfied ? "border-green-500/50 bg-green-500/10" : "border-border/30 bg-muted/20"
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div
-                    className="group cursor-pointer hover:scale-105 transition-all"
-                    onClick={() => {
-                      sdk.actions.openUrl(`https://warpcast.com/~/token/${CONFIG.SKIN_TOKEN}`)
-                    }}
-                  >
-                    <TokenLabel
-                      symbol="skin"
-                      amount={skinRequired.toString()}
-                      address={CONFIG.SKIN_TOKEN}
-                      subtitle="Burn to mint"
-                    />
-                  </div>
-                  {isSkinSatisfied && <CheckCircle2 className="w-6 h-6 text-green-500" />}
-                </div>
-              </div>
+  {/* SKIN */}
+  <div
+    className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
+      isSkinSatisfied ? "border-green-500/50 bg-green-500/10" : "border-border/30 bg-muted/20"
+    }`}
+  >
+    <div className="flex items-center justify-between">
+      <div
+        className="group cursor-pointer hover:scale-105 transition-all"
+        onClick={() => sdk.actions.openUrl(`https://warpcast.com/~/token/${CONFIG.SKIN_TOKEN}`)}
+      >
+        <TokenLabel
+          symbol="skin"
+          amount={formatBigInt(skinRequired)}
+          address={CONFIG.SKIN_TOKEN}
+          subtitle="Burn to mint"
+        />
+      </div>
+      {isSkinSatisfied && <CheckCircle2 className="w-6 h-6 text-green-500" />}
+    </div>
+  </div>
 
-              {/* BYEMONEY — только если $skin НЕ достаточно */}
-              {!isSkinSatisfied && (
-                <div
-                  className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
-                    isByemoneySatisfied ? "border-green-500/50 bg-green-500/10" : "border-border/30 bg-muted/20"
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div
-                      className="group cursor-pointer hover:scale-105 transition-all"
-                      onClick={() => {
-                        sdk.actions.openUrl(`https://warpcast.com/~/token/${CONFIG.BYEMONEY_TOKEN}`)
-                      }}
-                    >
-                      <TokenLabel
-                        symbol="byemoney"
-                        amount={byemoneyRequired.toString()}
-                        address={CONFIG.BYEMONEY_TOKEN}
-                        subtitle="Hold to mint"
-                      />
-                    </div>
-                    {isByemoneySatisfied && <CheckCircle2 className="w-6 h-6 text-green-500" />}
-                  </div>
-                </div>
-              )}
-            </div>
+  {/* BYEMONEY */}
+  {!isSkinSatisfied && (
+    <div
+      className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
+        isByemoneySatisfied ? "border-green-500/50 bg-green-500/10" : "border-border/30 bg-muted/20"
+      }`}
+    >
+      <div className="flex items-center justify-between">
+        <div
+          className="group cursor-pointer hover:scale-105 transition-all"
+          onClick={() => sdk.actions.openUrl(`https://warpcast.com/~/token/${CONFIG.BYEMONEY_TOKEN}`)}
+        >
+          <TokenLabel
+            symbol="byemoney"
+            amount={formatBigInt(byemoneyRequired)}
+            address={CONFIG.BYEMONEY_TOKEN}
+            subtitle="Hold to mint"
+          />
+        </div>
+        {isByemoneySatisfied && <CheckCircle2 className="w-6 h-6 text-green-500" />}
+      </div>
+    </div>
+  )}
+</div>
 
             <Button
               onClick={mintNFT}
