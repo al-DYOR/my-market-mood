@@ -16,7 +16,7 @@ Your project is live at:
 
 **[https://vercel.com/als-projects-ce543216/v0-daily-portfolio-spirit](https://vercel.com/als-projects-ce543216/v0-daily-portfolio-spirit)**
 
-## Build your app
+## Build your app 
 
 Continue building your app on:
 
