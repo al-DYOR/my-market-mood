@@ -156,14 +156,30 @@ if (!skinBurnedFlag) {
     args: [skinRequired]
   })
 
+  // Вынесите в отдельную async функцию
+const burnSkinTokens = async () => {
   const { id: batchId } = await walletClient.sendCalls({
     account: walletAddress as `0x${string}`,
     calls: [{ to: CONFIG.SKIN_TOKEN as `0x${string}`, data: burnData, value: 0n }],
     experimental_fallback: true
   })
-
   await walletClient.waitForCallsStatus({ id: batchId })
   localStorage.setItem('hasBurnedSkin', 'true')
+  return batchId
+}
+
+// Вызов в if:
+if (!skinBurnedFlag) {
+  console.log("Sufficient $skin balance, burning tokens...")
+  mintPath = "Burn SKIN"
+  
+  const burnData = encodeFunctionData({
+    abi: ERC20_ABI,
+    functionName: "burn",
+    args: [skinRequired]
+  })
+  
+  await burnSkinTokens()  // ✅ Теперь OK!
 }
 
 const generateUniqueName = (
