@@ -58,11 +58,9 @@ export default function RootLayout({
       </head>
 
       <body className={`${geist.className} ${geistMono.className} antialiased`}>
-        <Providers>  {/* ← ДОБАВИЛИ */}
           <MiniKitWrapper />
           {children}
           <Analytics />
-        </Providers>  {/* ← ДОБАВИЛИ */}
       </body>
     </html>
   )
