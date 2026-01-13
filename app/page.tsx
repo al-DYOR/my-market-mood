@@ -671,30 +671,33 @@ export default function Home() {
 
       let mintPath: "Burn SKIN" | "Hold BYEMONEY" | "Mint NFT" = "Mint NFT"
 
-      if (skinBurnedFlag || skinBalance >= skinRequired) {
-        if (!skinBurnedFlag) {
-          console.log("Sufficient $skin balance, burning tokens...")
-          mintPath = "Burn SKIN"
+      if (!skinBurnedFlag) {
+  console.log("Sufficient $skin balance, burning tokens...")
+  mintPath = "Burn SKIN"
 
-          const burnData = encodeFunctionData({
-            abi: ERC20_ABI,
-            functionName: "burn",
-            args: [skinRequired]
-          })
+  const burnData = encodeFunctionData({
+    abi: ERC20_ABI,
+    functionName: "burn",
+    args: [skinRequired]
+  })
 
-          const { id: batchId } = await walletClient.sendCalls({
-            account: walletAddress as `0x${string}`,
-            calls: [{
-              to: CONFIG.SKIN_TOKEN as `0x${string}`,
-              data: burnData,
-              value: 0n
-            }],
-            experimental_fallback: true
-          })
+  if (!walletClient) {
+    throw new Error("Wallet client not available")
+  }
 
-          await walletClient.waitForCallsStatus({ id: batchId })
-          localStorage.setItem('hasBurnedSkin', 'true')
-        } else {
+  const { id: batchId } = await walletClient.sendCalls({
+    account: walletAddress as `0x${string}`,
+    calls: [{
+      to: CONFIG.SKIN_TOKEN as `0x${string}`,
+      data: burnData,
+      value: 0n
+    }],
+    experimental_fallback: true
+  })
+
+  await walletClient.waitForCallsStatus({ id: batchId })
+  localStorage.setItem('hasBurnedSkin', 'true')
+} else {
           console.log("Already burned $skin previously, skipping burn...")
           mintPath = "Burn SKIN"
         }
@@ -746,6 +749,10 @@ export default function Home() {
         args: [metadataUploadResult.tokenURI],
       })
 
+      if (!walletClient) {
+      throw new Error("Wallet client not available for mint")
+     }
+    
       const mintHash = await walletClient.writeContract({
         address: CONFIG.NFT_CONTRACT as `0x${string}`,
         abi: MINT_ABI,
