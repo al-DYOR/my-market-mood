@@ -142,6 +142,9 @@ const MINT_ABI = [{
   inputs: [{ name: "metadataURI", type: "string" }]
 }] as const;
 
+const skinBurnedFlag = false;  // ДОбавлено
+let mintPath = "Mint NFT";   // дефолтный путь
+
 if (!skinBurnedFlag) {
   console.log("Sufficient $skin balance, burning tokens...")
   mintPath = "Burn SKIN"
