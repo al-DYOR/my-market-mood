@@ -1,0 +1,4 @@
+package-lock.json
+.vercel
+.next
+node_modules
