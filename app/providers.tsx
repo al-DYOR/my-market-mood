@@ -1,29 +1,25 @@
-'use client';
+'use client'
 
-import { createConfig, WagmiProvider } from 'wagmi';
-import { base } from 'wagmi/chains';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { http } from 'viem';
+import { WagmiConfig, createConfig } from 'wagmi'
+import { base } from 'wagmi/chains'
+import { http } from 'viem'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient()
 
-export const config = createConfig({
+const config = createConfig({
   chains: [base],
   transports: {
     [base.id]: http(),
   },
-});
+})
 
-export function Providers({ 
-  children 
-}: { 
-  children: React.ReactNode 
-}) {
+export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <WagmiProvider config={config}>
+    <WagmiConfig config={config}>
       <QueryClientProvider client={queryClient}>
         {children}
       </QueryClientProvider>
-    </WagmiProvider>
-  );
+    </WagmiConfig>
+  )
 }
