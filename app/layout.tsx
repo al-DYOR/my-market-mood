@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import MiniKitWrapper from "./MiniKitWrapper"
+import { Providers } from './providers'; // ← НОВЫЙ ИМПОРТ
 
 const geist = Geist({ subsets: ["latin"] })
 const geistMono = Geist_Mono({ subsets: ["latin"] })
@@ -57,9 +58,11 @@ export default function RootLayout({
       </head>
 
       <body className={`${geist.className} ${geistMono.className} antialiased`}>
-        <MiniKitWrapper />
-        {children}
-        <Analytics />
+        <Providers>  {/* ← ДОБАВИЛИ */}
+          <MiniKitWrapper />
+          {children}
+          <Analytics />
+        </Providers>  {/* ← ДОБАВИЛИ */}
       </body>
     </html>
   )
