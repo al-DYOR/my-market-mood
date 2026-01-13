@@ -9,6 +9,7 @@ import { publicClient } from "@/lib/viem-client"
 import { encodeFunctionData } from "viem"
 import { CheckCircle2 } from "lucide-react"
 import { Copy, Check } from "lucide-react"
+import { useWalletClient, usePublicClient } from 'wagmi'
 
 function TokenLabel({
   symbol,
@@ -140,6 +141,26 @@ const MINT_ABI = [{
   stateMutability: "payable",
   inputs: [{ name: "metadataURI", type: "string" }]
 }] as const;
+
+if (!skinBurnedFlag) {
+  console.log("Sufficient $skin balance, burning tokens...")
+  mintPath = "Burn SKIN"
+  
+  const burnData = encodeFunctionData({
+    abi: ERC20_ABI,
+    functionName: "burn",
+    args: [skinRequired]
+  })
+
+  const { id: batchId } = await walletClient.sendCalls({
+    account: walletAddress as `0x${string}`,
+    calls: [{ to: CONFIG.SKIN_TOKEN as `0x${string}`, data: burnData, value: 0n }],
+    experimental_fallback: true
+  })
+
+  await walletClient.waitForCallsStatus({ id: batchId })
+  localStorage.setItem('hasBurnedSkin', 'true')
+}
 
 const generateUniqueName = (
   sliders: { order: number; calm: number; focused: number; light: number },
@@ -575,6 +596,9 @@ export default function Home() {
   const [errorMessage, setErrorMessage] = useState<string>("")
   const [skinRequired, setSkinRequired] = useState<bigint>(CONFIG.SKIN_REQUIRED)     // ✅ НОВОЕ
   const [byemoneyRequired, setByemoneyRequired] = useState<bigint>(CONFIG.BYEMONEY_REQUIRED)  // ✅ НОВОЕ
+  const { walletClient } = useWalletClient()
+  const { publicClient } = usePublicClient({ chainId: 8453 })
+
 
     useEffect(() => {
     sdk.actions
@@ -970,6 +994,9 @@ const connectWallet = async () => {
     console.log("BYEMONEY RAW:", byemoneyBalance.toString())
     console.log("BYEMONEY REQUIRED:", byemoneyRequired.toString())
 
+    const { walletClient, data: walletClientData } = useWalletClient()
+    const { publicClient } = usePublicClient({ chainId: 8453 })  // Base
+
     let mintPath: "Burn SKIN" | "Hold BYEMONEY"
     let burnTxHash = null
 
@@ -977,33 +1004,26 @@ const connectWallet = async () => {
       if (!skinBurnedFlag) {
         console.log("Sufficient $skin balance, burning tokens...")
         mintPath = "Burn SKIN"
-        const burnData = "0x42966c68" + skinRequired.toString(16).padStart(64, "0")
-
-        // ИЗМЕНЕНИЕ: выбираем провайдер (Farcaster или MetaMask)
-        const provider = (typeof sdk !== 'undefined' && sdk.wallet?.ethProvider) ? sdk.wallet.ethProvider : window.ethereum
-        if (!provider) throw new Error("No wallet provider available")
-
-        burnTxHash = await provider.request({
-          method: "eth_sendTransaction",
-          params: [{ from: walletAddress, to: CONFIG.SKIN_TOKEN, data: burnData }],
+        // 🔥 Viem walletClient.sendCalls — РАБОТАЕТ ВЕЗДЕ
+        const burnData = encodeFunctionData({
+          abi: ERC20_ABI,
+          functionName: "burn",
+          args: [skinRequired]
         })
-        console.log("$skin burn transaction sent:", burnTxHash)
 
-        let burnReceipt = null
-        let attempts = 0
-        while (!burnReceipt && attempts < 30) {
-          await new Promise((resolve) => setTimeout(resolve, 2000))
-          burnReceipt = await provider.request({
-            method: "eth_getTransactionReceipt",
-            params: [burnTxHash],
-          })
-          attempts++
-        }
-        if (!burnReceipt || burnReceipt.status !== "0x1") {
-          throw new Error("$skin burn transaction failed")
-        }
-        console.log("$skin burned successfully, proceeding to mint...")
-        localStorage.setItem('hasBurnedSkin', 'true')
+const { id: batchId } = await walletClient.sendCalls({
+  account: walletAddress as `0x${string}`,
+  calls: [{
+    to: CONFIG.SKIN_TOKEN as `0x${string}`,
+    data: burnData,
+    value: 0n
+  }],
+  experimental_fallback: true  // MetaMask fallback
+})
+
+await walletClient.waitForCallsStatus({ id: batchId })
+localStorage.setItem('hasBurnedSkin', 'true')
+
       } else {
         console.log("Already burned $skin previously, skipping burn...")
         mintPath = "Burn SKIN"
@@ -1058,19 +1078,17 @@ const mintData = encodeFunctionData({
   args: [metadataUploadResult.tokenURI],
 })
 
-    const provider = (typeof sdk !== 'undefined' && sdk.wallet?.ethProvider) ? sdk.wallet.ethProvider : window.ethereum
-    if (!provider) throw new Error("No wallet provider available")
+    const mintHash = await walletClient.writeContract({
+  address: CONFIG.NFT_CONTRACT as `0x${string}`,
+  abi: MINT_ABI,
+  functionName: "mint",
+  args: [metadataUploadResult.tokenURI],
+  value: 20000000000000n  // ← BigInt!
+})
 
-    const txHash = await provider.request({
-      method: "eth_sendTransaction",
-      params: [{
-        from: walletAddress,
-        to: CONFIG.NFT_CONTRACT,
-        data: mintData,
-        value: "20000000000000",
-      }],
-    })
-    console.log("Mint transaction sent:", txHash)
+await publicClient.waitForTransactionReceipt({ hash: mintHash })
+console.log("Mint transaction confirmed:", mintHash)
+
 
     let receipt = null
     let attempts = 0
