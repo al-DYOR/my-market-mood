@@ -669,7 +669,7 @@ export default function Home() {
       console.log("BYEMONEY RAW:", byemoneyBalance.toString())
       console.log("BYEMONEY REQUIRED:", byemoneyRequired.toString())
 
-      let mintPath: "Burn SKIN" | "Hold BYEMONEY" = "Mint NFT"
+      let mintPath: "Burn SKIN" | "Hold BYEMONEY" | "Mint NFT" = "Mint NFT"
 
       if (skinBurnedFlag || skinBalance >= skinRequired) {
         if (!skinBurnedFlag) {
