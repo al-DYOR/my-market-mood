@@ -310,7 +310,7 @@ export default function Home() {
   const [byemoneyRequired, setByemoneyRequired] = useState<bigint>(CONFIG.BYEMONEY_REQUIRED)
 
   const { data: walletClient } = useWalletClient()
-  const { data: publicClient } = usePublicClient({ chainId: 8453 }) // Base
+  const publicClient = usePublicClient({ chainId: 8453 })
 
   useEffect(() => {
     sdk.actions
