@@ -1,5 +1,6 @@
 "use client"
 
+import { useWalletClient, usePublicClient } from 'wagmi';
 import { useState, useEffect } from "react"
 import { sdk } from '@farcaster/miniapp-sdk'
 import { Card } from "@/components/ui/card"
@@ -9,7 +10,6 @@ import { publicClient } from "@/lib/viem-client"
 import { encodeFunctionData } from "viem"
 import { CheckCircle2 } from "lucide-react"
 import { Copy, Check } from "lucide-react"
-import { useWalletClient, usePublicClient } from 'wagmi'
 
 function TokenLabel({
   symbol,
