@@ -1348,7 +1348,7 @@ const mintData = encodeFunctionData({
               className="w-full h-14 text-base font-semibold shadow-lg shadow-accent/20 hover:shadow-xl hover:shadow-accent/30 transition-all bg-gradient-to-r from-accent to-primary hover:from-accent/90 hover:to-primary/90 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed"
               size="lg"
             >
-              {isMinting ? "Minting..." : "Mint NFT"}
+              {isMinting ? "Minting..." : "Mint NFT (0.00002 ETH)"}
             </Button>
 
             {mintError && <p className="text-sm text-destructive text-center mt-3">{mintError}</p>}
