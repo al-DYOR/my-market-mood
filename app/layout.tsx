@@ -59,7 +59,7 @@ export default function RootLayout({
 
       <body className={`${geist.className} ${geistMono.className} antialiased`}>
           <MiniKitWrapper />
-          {children}
+          <Providers>{children}</Providers>
           <Analytics />
       </body>
     </html>
