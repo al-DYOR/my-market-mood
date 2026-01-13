@@ -671,38 +671,100 @@ const connectWallet = async () => {
     canvas.height = 1000
     const ctx = canvas.getContext("2d")!
 
-    // 1. СИНИЙ ФОН (проверим что работает)
-    ctx.fillStyle = "#1a1a2e"
+    // 1. РАНДОМНЫЙ ФОН
+    const bgColors = ['#1a1a2e', '#0f0f23', '#2a0a2a', '#1e3a1e', '#0a1a2a', '#2a1a0a']
+    ctx.fillStyle = bgColors[Math.floor(Math.random() * bgColors.length)]
     ctx.fillRect(0, 0, 1000, 1000)
 
-    // 2. ЗЕЛЁНЫЙ МОНСТР (32x32 пикселей)
-    const monsterX = 484, monsterY = 484
+    // 2. РАНДОМНЫЙ СИД ДЛЯ ЦВЕТОВ
+    const seed = Date.now()
+    const bodyHue = (seed % 360)
+    const bodyColor = `hsl(${bodyHue}, 70%, 45%)`
+    const outlineColor = `hsl(${(bodyHue + 120) % 360}, 60%, 30%)`
+    const eyeHue = ((seed * 3) % 360)
+    const eyeColor = `hsl(${eyeHue}, 80%, 65%)`
+    const mouthHue = ((seed * 7) % 360)
+    const mouthColor = `hsl(${mouthHue}, 75%, 55%)`
+
+    // 3. МОНСТР 800x800
+    const monsterX = 100, monsterY = 100
+    const monsterSize = 800
     
     ctx.imageSmoothingEnabled = false
     
-    // ТЕЛО (зеленое)
-    ctx.fillStyle = "#4ade80"
-    ctx.fillRect(monsterX, monsterY, 32, 32)
+    // ТЕЛО
+    ctx.fillStyle = bodyColor
+    ctx.fillRect(monsterX, monsterY, monsterSize, monsterSize)
     
-    // ГЛАЗА (белые)
-    ctx.fillStyle = "#ffffff"
-    ctx.fillRect(monsterX + 8, monsterY + 8, 6, 6)
-    ctx.fillRect(monsterX + 18, monsterY + 8, 6, 6)
+    // ОБВОДКА
+    ctx.strokeStyle = outlineColor
+    ctx.lineWidth = 8
+    ctx.strokeRect(monsterX, monsterY, monsterSize, monsterSize)
     
-    // ЗРАЧКИ (черные)
-    ctx.fillStyle = "#000000"
-    ctx.fillRect(monsterX + 10, monsterY + 10, 2, 2)
-    ctx.fillRect(monsterX + 20, monsterY + 10, 2, 2)
+    // 🎲 РАНДОМНЫЕ АКСЕССУАРЫ (независимый шанс для КАЖДОГО!)
+    const earsChance = Math.random()
+    const hornsChance = Math.random()
+    const earringsChance = Math.random()
+    const glassesChance = Math.random()
     
-    // РОТ (красный)
-    ctx.fillStyle = "#ef4444"
-    ctx.fillRect(monsterX + 12, monsterY + 22, 8, 3)
+    // 🦴 УШИ (50% шанс)
+    if (earsChance > 0.5) {
+      ctx.fillStyle = bodyColor
+      ctx.fillRect(monsterX - 64, monsterY + 256, 128, 256)
+      ctx.fillRect(monsterX + 736, monsterY + 256, 128, 256)
+    }
+    
+    // 👹 РОГА (40% шанс)
+    if (hornsChance > 0.6) {
+      ctx.fillStyle = outlineColor
+      ctx.fillRect(monsterX + 128, monsterY - 128, 128, 256)
+      ctx.fillRect(monsterX + 544, monsterY - 128, 128, 256)
+    }
+    
+    // 💎 СЕРЬГИ (60% шанс)
+    if (earringsChance > 0.4) {
+      ctx.fillStyle = '#ffd700'
+      ctx.fillRect(monsterX + 128, monsterY + 704, 96, 96)
+      ctx.fillRect(monsterX + 576, monsterY + 704, 96, 96)
+    }
+    
+    // 🕶️ ОЧКИ (30% шанс)
+    if (glassesChance > 0.7) {
+      ctx.strokeStyle = '#000000'
+      ctx.lineWidth = 6
+      ctx.strokeRect(monsterX + 160, monsterY + 160, 160, 160)
+      ctx.strokeRect(monsterX + 480, monsterY + 160, 160, 160)
+      ctx.lineWidth = 4
+      ctx.beginPath()
+      ctx.moveTo(monsterX + 320, monsterY + 160)
+      ctx.lineTo(monsterX + 320, monsterY + 320)
+      ctx.stroke()
+    }
+    
+    // ГЛАЗА (всегда)
+    ctx.fillStyle = eyeColor
+    ctx.fillRect(monsterX + 160, monsterY + 160, 160, 160)
+    ctx.fillRect(monsterX + 480, monsterY + 160, 160, 160)
+    
+    // ЗРАЧКИ (всегда)
+    ctx.fillStyle = '#000000'
+    ctx.fillRect(monsterX + 224, monsterY + 224, 64, 64)
+    ctx.fillRect(monsterX + 544, monsterY + 224, 64, 64)
+    
+    // РОТ (всегда)
+    ctx.fillStyle = mouthColor
+    ctx.fillRect(monsterX + 240, monsterY + 560, 320, 128)
+    
+    // ЗУБЫ (всегда)
+    ctx.fillStyle = '#ffffff'
+    ctx.fillRect(monsterX + 288, monsterY + 592, 64, 64)
+    ctx.fillRect(monsterX + 384, monsterY + 592, 64, 64)
+    ctx.fillRect(monsterX + 480, monsterY + 592, 64, 64)
 
-    // 3. ТВОИ СЛОВА (если есть)
+    // 4. ТВОИ СЛОВА (ГАРАНТИРОВАННО!)
     if (generatedName) {
       ctx.fillStyle = 'rgba(0,0,0,0.8)'
       ctx.fillRect(0, 820, 1000, 180)
-      
       ctx.font = 'bold 90px monospace'
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
@@ -712,7 +774,6 @@ const connectWallet = async () => {
       ctx.fillText(generatedName, 500, 910)
     }
 
-    // ❌ УБРАЛ grain эффект!
     resolve(canvas.toDataURL("image/png"))
   })
 }
