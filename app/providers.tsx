@@ -1,14 +1,16 @@
 'use client';
-import { WagmiProvider } from 'wagmi';
+import { createConfig, WagmiProvider } from 'wagmi';  // ✅ WagmiProvider из wagmi!
 import { base } from 'wagmi/chains';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { http } from 'viem';
 
 const queryClient = new QueryClient();
-const config = {
+export const config = createConfig({
   chains: [base],
-  transports: { [base.id]: http() }
-};
+  transports: {
+    [base.id]: http(),
+  },
+});
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
