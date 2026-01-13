@@ -30,8 +30,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <title>Market Mood today</title>
+        <title>Market Mood Today</title>
         <meta name="description" content="Your current state based on today's market and your on-chain identity" />
+
+         {/* ✅ Farcaster баннер */}
+        <meta property="og:title" content="Market Mood Today" />
+        <meta property="og:description" content="Mint your trading state as unique pixel monster NFT (0.00002 ETH)" />
+        <meta property="og:image" content="/opengraph-image.jpg" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://v0-mymarketmood.vercel.app/" />
+        
+        {/* Twitter Card (Warpcast тоже использует) */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Market Mood Today" />
+        <meta name="twitter:description" content="Mint your trading state NFT" />
+        <meta name="twitter:image" content="/opengraph-image.jpg" />
 
         {/* Иконки */}
         <link rel="icon" href="/icon-512.png" type="image/png" sizes="512x512" />
