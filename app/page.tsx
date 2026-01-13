@@ -665,143 +665,112 @@ const connectWallet = async () => {
   }
 
   const generateNFTImage = async (): Promise<string> => {
-    return new Promise(async (resolve) => {
-      const canvas = document.createElement("canvas")
-      canvas.width = 1000
-      canvas.height = 1000
-      const ctx = canvas.getContext("2d")!
+  return new Promise(async (resolve) => {
+    const canvas = document.createElement("canvas")
+    canvas.width = 1000
+    canvas.height = 1000
+    const ctx = canvas.getContext("2d")!
 
-      // Solid background based on Light/Heavy state with analog feel
-      if (sliders.light < 50) {
-        // Light mode: warm off-white, not pure white
-        ctx.fillStyle = "#f8f6f3"
-      } else {
-        // Dark mode: deep charcoal, not pure black
-        ctx.fillStyle = "#0f0f12"
-      }
-      ctx.fillRect(0, 0, 1000, 1000)
+    // РАНДОМНЫЙ ФОН
+    const bgColors = [
+      ['#1a1a2e', '#16213e'], ['#0f0f23', '#1a1a3e'], ['#2a0a2a', '#4a1a4a'],
+      ['#1e3a1e', '#2d4a2d'], ['#0a1a2a', '#1a3a4a'], ['#2a1a0a', '#4a2a1a']
+    ]
+    const bgColor = bgColors[Math.floor(Math.random() * bgColors.length)]
+    const gradient = ctx.createLinearGradient(0, 0, 1000, 1000)
+    gradient.addColorStop(0, bgColor[0])
+    gradient.addColorStop(1, bgColor[1])
+    ctx.fillStyle = gradient
+    ctx.fillRect(0, 0, 1000, 1000)
 
-      // Load and draw user PFP if available
-      if (farcasterPfp) {
-        try {
-          const img = new Image()
-          img.crossOrigin = "anonymous"
+    // ПИКСЕЛЬНЫЙ МОНСТР 32x32
+    const monsterX = 484, monsterY = 484
+    const monsterSeed = Date.now() + Math.random() * 10000
+    const bodyType = Math.floor(monsterSeed / 1000) % 4
+    const eyesType = Math.floor(monsterSeed / 10) % 4
+    const mouthType = monsterSeed % 6
 
-          await new Promise<void>((resolveImage, rejectImage) => {
-            img.onload = () => {
-              // Draw PFP as full background
-              ctx.save()
+    const bodyHue = (monsterSeed % 360)
+    const outlineHue = (bodyHue + 60 + Math.random() * 60) % 360
+    const bodyColor = `hsl(${bodyHue}, 60%, 35%)`
+    const outlineColor = `hsl(${outlineHue}, 70%, 25%)`
+    const eyeColor = `hsl(${(monsterSeed * 3) % 360}, 80%, 20%)`
 
-              // Calculate scaling to cover entire canvas
-              const scale = Math.max(1000 / img.width, 1000 / img.height)
-              const scaledWidth = img.width * scale
-              const scaledHeight = img.height * scale
-              const x = (1000 - scaledWidth) / 2
-              const y = (1000 - scaledHeight) / 2
+    ctx.save()
+    ctx.imageSmoothingEnabled = false
+    
+    // ТЕЛО
+    ctx.fillStyle = bodyColor
+    if (bodyType === 0) {
+      ctx.beginPath()
+      ctx.arc(monsterX + 16, monsterY + 20, 14, 0, Math.PI * 2)
+      ctx.fill()
+    } else if (bodyType === 1) {
+      ctx.fillRect(monsterX + 4, monsterY + 8, 24, 20)
+    } else {
+      ctx.beginPath()
+      ctx.arc(monsterX + 16, monsterY + 16, 14, 0, Math.PI * 2)
+      ctx.fill()
+    }
 
-              const filters: string[] = []
+    // ОБВОДКА
+    ctx.strokeStyle = outlineColor
+    ctx.lineWidth = 2
+    ctx.strokeRect(monsterX + 2, monsterY + 6, 28, 24)
 
-              // Base desaturation for analog feel (85-95% saturation)
-              filters.push("saturate(90%)")
+    // ГЛАЗА
+    ctx.fillStyle = eyeColor
+    if (eyesType === 0) {
+      ctx.beginPath()
+      ctx.arc(monsterX + 10, monsterY + 6, 2, 0, Math.PI * 2)
+      ctx.arc(monsterX + 22, monsterY + 6, 2, 0, Math.PI * 2)
+      ctx.fill()
+    } else {
+      ctx.fillRect(monsterX + 9, monsterY + 6, 4, 2)
+      ctx.fillRect(monsterX + 19, monsterY + 6, 4, 2)
+    }
 
-              // Gentle contrast curve (no harsh blacks/whites)
-              filters.push("contrast(95%)")
+    // РОТ
+    ctx.strokeStyle = `hsl(${(outlineHue + 120) % 360}, 50%, 20%)`
+    ctx.lineWidth = 1.5
+    ctx.lineCap = 'round'
+    ctx.beginPath()
+    ctx.arc(monsterX + 16, monsterY + 14, 3, 0, Math.PI)
+    ctx.stroke()
 
-              // Slight brightness adjustment to preserve skin tones
-              filters.push("brightness(102%)")
+    ctx.restore()
 
-              // Apply blur for Distracted state
-              if (sliders.focused >= 50) {
-                const blurAmount = ((sliders.focused - 50) / 50) * 3 // 0-3px subtle blur
-                filters.push(`blur(${blurAmount}px)`)
-              }
+    // ТВОИ СЛОВА (снизу)
+    if (generatedName) {
+      ctx.save()
+      ctx.fillStyle = `rgba(0,0,0,0.7)`
+      ctx.fillRect(0, 820, 1000, 180)
+      ctx.font = "bold 90px monospace"
+      ctx.textAlign = "center"
+      ctx.textBaseline = "middle"
+      ctx.fillStyle = "#ffffff"
+      ctx.shadowColor = "#000"
+      ctx.shadowBlur = 4
+      ctx.fillText(generatedName, 500, 910)
+      ctx.restore()
+    }
 
-              // Adjust for Calm/Anxious state with subtlety
-              if (sliders.calm >= 50) {
-                // Anxious: very slight increase in contrast only
-                const anxietyLevel = (sliders.calm - 50) / 50
-                const contrast = 95 + anxietyLevel * 8 // 95-103%
-                filters[1] = `contrast(${contrast}%)`
-              } else {
-                // Calm: reduce saturation further for muted look
-                const calmLevel = (50 - sliders.calm) / 50
-                const saturation = 90 - calmLevel * 15 // 75-90%
-                filters[0] = `saturate(${saturation}%)`
-              }
+    // Grain
+    ctx.globalAlpha = 0.03
+    const grainData = ctx.createImageData(1000, 1000)
+    for (let i = 0; i < grainData.data.length; i += 4) {
+      const noise = Math.random() * 255
+      grainData.data[i] = noise
+      grainData.data[i + 1] = noise
+      grainData.data[i + 2] = noise
+      grainData.data[i + 3] = 255
+    }
+    ctx.putImageData(grainData, 0, 0)
+    ctx.globalAlpha = 1
 
-              ctx.filter = filters.join(" ")
-
-              // Draw the transformed image
-              ctx.drawImage(img, x, y, scaledWidth, scaledHeight)
-              ctx.restore()
-
-              ctx.globalAlpha = 0.04
-              const grainData = ctx.createImageData(1000, 1000)
-              for (let i = 0; i < grainData.data.length; i += 4) {
-                const noise = Math.random() * 255
-                grainData.data[i] = noise
-                grainData.data[i + 1] = noise
-                grainData.data[i + 2] = noise
-                grainData.data[i + 3] = 255
-              }
-              ctx.putImageData(grainData, 0, 0)
-              ctx.globalAlpha = 1
-
-              const vignetteGradient = ctx.createRadialGradient(500, 500, 300, 500, 500, 700)
-              vignetteGradient.addColorStop(0, "rgba(0, 0, 0, 0)")
-              vignetteGradient.addColorStop(0.7, "rgba(0, 0, 0, 0.05)")
-              vignetteGradient.addColorStop(1, "rgba(0, 0, 0, 0.25)")
-              ctx.fillStyle = vignetteGradient
-              ctx.fillRect(0, 0, 1000, 1000)
-
-              resolveImage()
-            }
-
-            img.onerror = () => {
-              console.error("Failed to load PFP image")
-              rejectImage()
-            }
-          })
-
-          img.src = farcasterPfp
-        } catch (error) {
-          console.error("Error loading PFP:", error)
-          // Fallback to simple background if PFP fails
-          drawFallbackBackground(ctx)
-        }
-      } else {
-        // No PFP available - draw fallback
-        drawFallbackBackground(ctx)
-      }
-
-      if (generatedName) {
-        ctx.save()
-
-        // Subtle semi-transparent overlay for text embedding
-        ctx.fillStyle = "rgba(0, 0, 0, 0.15)"
-        ctx.fillRect(0, 820, 1000, 180)
-
-        ctx.font = "700 100px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-        ctx.textAlign = "center"
-        ctx.textBaseline = "middle"
-
-        // First layer: subtle dark shadow for depth
-        ctx.fillStyle = "rgba(0, 0, 0, 0.4)"
-        ctx.fillText(generatedName, 500, 912)
-
-        // Second layer: main text with high contrast
-        ctx.fillStyle = "#ffffff"
-        ctx.shadowColor = "transparent"
-        ctx.shadowBlur = 0
-        ctx.fillText(generatedName, 500, 910)
-
-        ctx.restore()
-      }
-
-      const dataUrl = canvas.toDataURL("image/png")
-      resolve(dataUrl)
-    })
-  }
+    resolve(canvas.toDataURL("image/png"))
+  })
+}
 
   const drawFallbackBackground = (ctx: CanvasRenderingContext2D) => {
     // Simple gradient based on state
