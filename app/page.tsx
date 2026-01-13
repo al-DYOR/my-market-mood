@@ -1,6 +1,8 @@
-"use client"
+'use client';
 
 import { useWalletClient, usePublicClient } from 'wagmi';
+import { CheckCircle2 } from "lucide-react"
+import { Copy, Check } from "lucide-react"
 import { useState, useEffect } from "react"
 import { sdk } from '@farcaster/miniapp-sdk'
 import { Card } from "@/components/ui/card"
@@ -8,8 +10,6 @@ import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
 import { publicClient } from "@/lib/viem-client"
 import { encodeFunctionData } from "viem"
-import { CheckCircle2 } from "lucide-react"
-import { Copy, Check } from "lucide-react"
 
 function TokenLabel({
   symbol,
@@ -616,9 +616,8 @@ export default function Home() {
   const [errorMessage, setErrorMessage] = useState<string>("")
   const [skinRequired, setSkinRequired] = useState<bigint>(CONFIG.SKIN_REQUIRED)     // ✅ НОВОЕ
   const [byemoneyRequired, setByemoneyRequired] = useState<bigint>(CONFIG.BYEMONEY_REQUIRED)  // ✅ НОВОЕ
-  const { walletClient } = useWalletClient()
-  const { publicClient } = usePublicClient({ chainId: 8453 })
-
+  const { data: walletClient } = useWalletClient()
+  const { data: publicClient } = usePublicClient({ chainId: 8453 })
 
     useEffect(() => {
     sdk.actions
