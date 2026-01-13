@@ -114,6 +114,14 @@ const traits = [
   { id: "light", left: "Light", right: "Dark" },
 ]
 
+// ТУТ (между ERC20_ABI и generateUniqueName):
+const MINT_ABI = [{
+  name: "mint",
+  type: "function",
+  stateMutability: "payable",
+  inputs: [{ name: "metadataURI", type: "string" }]
+}] as const;
+
 const generateUniqueName = (
   sliders: { order: number; calm: number; focused: number; light: number },
   usedNames: string[],
@@ -1016,7 +1024,7 @@ const connectWallet = async () => {
       return
     }
 
-    // Загрузка image и metadata — ТВОЙ КОД ОСТАЁТСЯ БЕЗ ИЗМЕНЕНИЙ
+    // Загрузка image и metadata — МОЙ КОД ОСТАЁТСЯ БЕЗ ИЗМЕНЕНИЙ
     console.log("Uploading NFT metadata...")
     console.log("Using pre-generated image:", generatedImage.substring(0, 50) + "...")
     console.log("Uploading image to IPFS...")
@@ -1051,16 +1059,8 @@ const connectWallet = async () => {
     // Минт — ИЗМЕНЕНИЕ: используем тот же provider
     console.log("Calling mintNFT on contract...")
 const mintData = encodeFunctionData({
-  abi: [
-    {
-      name: "mintNFT",
-      type: "function",
-      stateMutability: "payable",
-      inputs: [{ name: "tokenURI", type: "string" }],
-      outputs: [],
-    },
-  ],
-  functionName: "mintNFT",
+  abi: MINT_ABI,
+  functionName: "mint",
   args: [metadataUploadResult.tokenURI],
 })
 
@@ -1073,7 +1073,7 @@ const mintData = encodeFunctionData({
         from: walletAddress,
         to: CONFIG.NFT_CONTRACT,
         data: mintData,
-        value: "0x470de4df820000",
+        value: "20000000000000",
       }],
     })
     console.log("Mint transaction sent:", txHash)
