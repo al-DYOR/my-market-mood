@@ -30,6 +30,10 @@ function TokenLabel({
     setTimeout(() => setCopied(false), 1200)
   }
 
+  const closeModal = () => {
+    setOpen(false)
+  }
+
   return (
     <div className="relative inline-block">
       <p
@@ -42,28 +46,43 @@ function TokenLabel({
       <p className="text-xs text-muted-foreground">{subtitle}</p>
 
       {open && (
-        <div className="absolute z-50 mt-2 w-72 rounded-xl border bg-background/95 backdrop-blur shadow-lg p-3 text-xs">
-          <p className="mb-2 text-muted-foreground">Contract address</p>
+        <div className="absolute z-50 mt-2 w-72 rounded-xl border bg-background/95 backdrop-blur shadow-lg p-4 text-xs">
+          {/* ✅ КРЕСТИК ДЛЯ ЗАКРЫТИЯ */}
+          <button
+            onClick={closeModal}
+            className="absolute top-2 right-2 text-muted-foreground hover:text-foreground h-5 w-5 p-0"
+          >
+            ✕
+          </button>
+          
+          <p className="mb-3 text-muted-foreground">Contract address</p>
 
-          <div className="flex items-center justify-between gap-2 rounded-lg bg-muted/40 px-2 py-1">
-            <code className="truncate text-xs">{address}</code>
+          {/* ✅ МАЛЕНЬКИЙ АДРЕС (text-xs → text-[10px]) */}
+          <div className="flex items-center justify-between gap-2 rounded-lg bg-muted/40 px-3 py-2">
+            <code className="truncate text-[10px] font-mono leading-tight">
+              {address}
+            </code>
 
             <button
               onClick={copy}
-              className="text-primary hover:opacity-80"
+              className="text-primary hover:opacity-80 p-1 hover:bg-muted rounded-sm"
+              title="Copy address"
             >
               {copied ? <Check size={14} /> : <Copy size={14} />}
             </button>
           </div>
 
           {copied && (
-            <p className="mt-2 text-green-500 text-xs">Copied</p>
+            <p className="mt-2 text-green-500 text-[11px] flex items-center gap-1">
+              <CheckCircle2 size={12} /> Copied!
+            </p>
           )}
         </div>
       )}
     </div>
   )
 }
+
 
 declare global {
   interface Window {
@@ -765,7 +784,7 @@ const connectWallet = async () => {
     if (generatedName) {
       ctx.fillStyle = 'rgba(0,0,0,0.8)'
       ctx.fillRect(0, 820, 1000, 180)
-      ctx.font = 'bold 90px monospace'
+      ctx.font = 'bold 60px monospace'
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
       ctx.fillStyle = '#ffffff'
