@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
 import { publicClient } from "@/lib/viem-client"
+import { encodeFunctionData } from "viem"
 import { CheckCircle2 } from "lucide-react"
 import { Copy, Check } from "lucide-react"
 
@@ -1049,14 +1050,19 @@ const connectWallet = async () => {
 
     // Минт — ИЗМЕНЕНИЕ: используем тот же provider
     console.log("Calling mintNFT on contract...")
-    const tokenURIHex = Buffer.from(metadataUploadResult.tokenURI).toString("hex")
-    const tokenURILength = (tokenURIHex.length / 2).toString(16).padStart(64, "0")
-    const tokenURIPadded = tokenURIHex.padEnd(Math.ceil(tokenURIHex.length / 64) * 64, "0")
-    const mintData =
-      "0xd204c45e" +
-      "0000000000000000000000000000000000000000000000000000000000000020" +
-      tokenURILength +
-      tokenURIPadded
+const mintData = encodeFunctionData({
+  abi: [
+    {
+      name: "mintNFT",
+      type: "function",
+      stateMutability: "payable",
+      inputs: [{ name: "tokenURI", type: "string" }],
+      outputs: [],
+    },
+  ],
+  functionName: "mintNFT",
+  args: [metadataUploadResult.tokenURI],
+})
 
     const provider = (typeof sdk !== 'undefined' && sdk.wallet?.ethProvider) ? sdk.wallet.ethProvider : window.ethereum
     if (!provider) throw new Error("No wallet provider available")
