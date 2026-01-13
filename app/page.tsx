@@ -776,10 +776,10 @@ export default function Home() {
 
       if (receipt && receipt.logs && receipt.logs.length > 0) {
         const transferLog = receipt.logs.find((log: any) => log.topics.length === 4)
-        if (transferLog) {
-          const extractedTokenId = BigInt(transferLog.topics[3]).toString()
-          setTokenId(extractedTokenId)
-          console.log("Minted tokenId:", extractedTokenId)
+        if (transferLog?.topics?.[3]) {
+    const extractedTokenId = BigInt(transferLog.topics[3]).toString()
+    setTokenId(extractedTokenId)
+    console.log("Minted tokenId:", extractedTokenId)
         }
       }
 
