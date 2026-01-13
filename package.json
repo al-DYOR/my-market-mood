@@ -1,9 +1,10 @@
 {
   "name": "my-v0-project",
   "version": "0.1.0",
-  "private": true,
+    "private": true,
   "engines": {
     "node": "16.x"
+  },
   "scripts": {
     "build": "next build",
     "dev": "next dev",
