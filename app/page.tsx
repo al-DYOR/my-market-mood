@@ -143,7 +143,7 @@ const MINT_ABI = [{
 }] as const;
 
 const skinBurnedFlag = false;  // ДОбавлено
-const skinRequired = 4164305n;  // ← ДОП
+const skinRequired = 4164305;  // ← ДОП
 let mintPath = "Mint NFT";   // дефолтный путь
 
 if (!skinBurnedFlag) {
