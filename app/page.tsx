@@ -665,16 +665,16 @@ const connectWallet = async () => {
   }
 
   const generateNFTImage = async (): Promise<string> => {
-  return new Promise(async (resolve) => {
+  return new Promise((resolve) => {
     const canvas = document.createElement("canvas")
     canvas.width = 1000
     canvas.height = 1000
     const ctx = canvas.getContext("2d")!
 
-    // РАНДОМНЫЙ ФОН
+    // 1. РАНДОМНЫЙ ФОН
     const bgColors = [
-      ['#1a1a2e', '#16213e'], ['#0f0f23', '#1a1a3e'], ['#2a0a2a', '#4a1a4a'],
-      ['#1e3a1e', '#2d4a2d'], ['#0a1a2a', '#1a3a4a'], ['#2a1a0a', '#4a2a1a']
+      ['#1a1a2e', '#16213e'], ['#0f0f23', '#1a1a3e'], 
+      ['#2a0a2a', '#4a1a4a'], ['#1e3a1e', '#2d4a2d']
     ]
     const bgColor = bgColors[Math.floor(Math.random() * bgColors.length)]
     const gradient = ctx.createLinearGradient(0, 0, 1000, 1000)
@@ -683,83 +683,84 @@ const connectWallet = async () => {
     ctx.fillStyle = gradient
     ctx.fillRect(0, 0, 1000, 1000)
 
-    // ПИКСЕЛЬНЫЙ МОНСТР 32x32
+    // 2. ПИКСЕЛЬНЫЙ МОНСТР
     const monsterX = 484, monsterY = 484
-    const monsterSeed = Date.now() + Math.random() * 10000
-    const bodyType = Math.floor(monsterSeed / 1000) % 4
-    const eyesType = Math.floor(monsterSeed / 10) % 4
-    const mouthType = monsterSeed % 6
+    const monsterSeed = Date.now()
+    const bodyType = Math.floor(monsterSeed / 1000000) % 4
+    const eyesType = Math.floor(monsterSeed / 10000) % 4
 
+    // ЦВЕТА
     const bodyHue = (monsterSeed % 360)
-    const outlineHue = (bodyHue + 60 + Math.random() * 60) % 360
-    const bodyColor = `hsl(${bodyHue}, 60%, 35%)`
-    const outlineColor = `hsl(${outlineHue}, 70%, 25%)`
-    const eyeColor = `hsl(${(monsterSeed * 3) % 360}, 80%, 20%)`
+    const bodyColor = `hsl(${bodyHue}, 70%, 40%)`
+    const outlineColor = `hsl(${(bodyHue + 120) % 360}, 60%, 25%)`
+    const eyeColor = '#ffffff'
 
-    ctx.save()
+    // ПИКСЕЛЬНЫЙ РЕЖИМ
     ctx.imageSmoothingEnabled = false
-    
-    // ТЕЛО
+    ctx.save()
+
+    // ТЕЛО (простое круглое)
     ctx.fillStyle = bodyColor
-    if (bodyType === 0) {
-      ctx.beginPath()
-      ctx.arc(monsterX + 16, monsterY + 20, 14, 0, Math.PI * 2)
-      ctx.fill()
-    } else if (bodyType === 1) {
-      ctx.fillRect(monsterX + 4, monsterY + 8, 24, 20)
-    } else {
-      ctx.beginPath()
-      ctx.arc(monsterX + 16, monsterY + 16, 14, 0, Math.PI * 2)
-      ctx.fill()
-    }
+    ctx.beginPath()
+    ctx.arc(monsterX + 16, monsterY + 20, 16, 0, Math.PI * 2)
+    ctx.fill()
 
     // ОБВОДКА
     ctx.strokeStyle = outlineColor
     ctx.lineWidth = 2
-    ctx.strokeRect(monsterX + 2, monsterY + 6, 28, 24)
+    ctx.lineJoin = 'round'
+    ctx.stroke()
 
     // ГЛАЗА
     ctx.fillStyle = eyeColor
     if (eyesType === 0) {
+      // Круглые глаза
       ctx.beginPath()
-      ctx.arc(monsterX + 10, monsterY + 6, 2, 0, Math.PI * 2)
-      ctx.arc(monsterX + 22, monsterY + 6, 2, 0, Math.PI * 2)
+      ctx.arc(monsterX + 10, monsterY + 12, 3, 0, Math.PI * 2)
+      ctx.arc(monsterX + 22, monsterY + 12, 3, 0, Math.PI * 2)
       ctx.fill()
     } else {
-      ctx.fillRect(monsterX + 9, monsterY + 6, 4, 2)
-      ctx.fillRect(monsterX + 19, monsterY + 6, 4, 2)
+      // Прямоугольные
+      ctx.fillRect(monsterX + 8, monsterY + 11, 6, 4)
+      ctx.fillRect(monsterX + 20, monsterY + 11, 6, 4)
     }
 
+    // ЗРАЧКИ
+    ctx.fillStyle = '#000'
+    ctx.beginPath()
+    ctx.arc(monsterX + 11, monsterY + 13, 1.5, 0, Math.PI * 2)
+    ctx.arc(monsterX + 23, monsterY + 13, 1.5, 0, Math.PI * 2)
+    ctx.fill()
+
     // РОТ
-    ctx.strokeStyle = `hsl(${(outlineHue + 120) % 360}, 50%, 20%)`
-    ctx.lineWidth = 1.5
+    ctx.strokeStyle = '#333'
+    ctx.lineWidth = 2
     ctx.lineCap = 'round'
     ctx.beginPath()
-    ctx.arc(monsterX + 16, monsterY + 14, 3, 0, Math.PI)
+    ctx.arc(monsterX + 16, monsterY + 24, 4, 0, Math.PI)
     ctx.stroke()
 
     ctx.restore()
 
-    // ТВОИ СЛОВА (снизу)
+    // 3. ТВОИ СЛОВА (НИЗ)
     if (generatedName) {
-      ctx.save()
-      ctx.fillStyle = `rgba(0,0,0,0.7)`
+      ctx.fillStyle = 'rgba(0,0,0,0.8)'
       ctx.fillRect(0, 820, 1000, 180)
-      ctx.font = "bold 90px monospace"
-      ctx.textAlign = "center"
-      ctx.textBaseline = "middle"
-      ctx.fillStyle = "#ffffff"
-      ctx.shadowColor = "#000"
-      ctx.shadowBlur = 4
-      ctx.fillText(generatedName, 500, 910)
-      ctx.restore()
+      
+      ctx.font = 'bold 90px monospace'
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'middle'
+      ctx.fillStyle = '#ffffff'
+      ctx.shadowColor = '#000'
+      ctx.shadowBlur = 8
+      ctx.fillText(generatedName!, 500, 910)
     }
 
-    // Grain
-    ctx.globalAlpha = 0.03
+    // 4. GRAIN ЭФФЕКТ
+    ctx.globalAlpha = 0.04
     const grainData = ctx.createImageData(1000, 1000)
     for (let i = 0; i < grainData.data.length; i += 4) {
-      const noise = Math.random() * 255
+      const noise = Math.random() * 60
       grainData.data[i] = noise
       grainData.data[i + 1] = noise
       grainData.data[i + 2] = noise
