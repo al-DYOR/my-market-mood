@@ -671,45 +671,46 @@ export default function Home() {
 
       let mintPath: "Burn SKIN" | "Hold BYEMONEY" | "Mint NFT" = "Mint NFT"
 
-      if (!skinBurnedFlag) {
-  console.log("Sufficient $skin balance, burning tokens...")
-  mintPath = "Burn SKIN"
+      if (skinBurnedFlag || skinBalance >= skinRequired) {
+  if (!skinBurnedFlag) {
+    console.log("Sufficient $skin balance, burning tokens...")
+    mintPath = "Burn SKIN"
 
-  const burnData = encodeFunctionData({
-    abi: ERC20_ABI,
-    functionName: "burn",
-    args: [skinRequired]
-  })
+    const burnData = encodeFunctionData({
+      abi: ERC20_ABI,
+      functionName: "burn",
+      args: [skinRequired]
+    })
 
-  if (!walletClient) {
-    throw new Error("Wallet client not available")
+    if (!walletClient) {
+      throw new Error("Wallet client not available for burn")
+    }
+
+    const { id: batchId } = await walletClient.sendCalls({
+      account: walletAddress as `0x${string}`,
+      calls: [{
+        to: CONFIG.SKIN_TOKEN as `0x${string}`,
+        data: burnData,
+        value: 0n
+      }],
+      experimental_fallback: true
+    })
+
+    await walletClient.waitForCallsStatus({ id: batchId })
+    localStorage.setItem('hasBurnedSkin', 'true')
+  } else {
+    console.log("Already burned $skin previously, skipping burn...")
+    mintPath = "Burn SKIN"
   }
-
-  const { id: batchId } = await walletClient.sendCalls({
-    account: walletAddress as `0x${string}`,
-    calls: [{
-      to: CONFIG.SKIN_TOKEN as `0x${string}`,
-      data: burnData,
-      value: 0n
-    }],
-    experimental_fallback: true
-  })
-
-  await walletClient.waitForCallsStatus({ id: batchId })
-  localStorage.setItem('hasBurnedSkin', 'true')
-} else {
-          console.log("Already burned $skin previously, skipping burn...")
-          mintPath = "Burn SKIN"
-        }
-      } else if (byemoneyBalance >= byemoneyRequired) {
-        console.log("Sufficient $byemoney balance, proceeding to mint...")
-        mintPath = "Hold BYEMONEY"
-      } else {
-        setErrorMessage("Insufficient tokens. Need 4164305 $skin or 1000000 $byemoney to mint.")
-        setShowErrorToast(true)
-        setIsMinting(false)
-        return
-      }
+} else if (byemoneyBalance >= byemoneyRequired) {  // ← правильный else if
+  console.log("Sufficient $byemoney balance, proceeding to mint...")
+  mintPath = "Hold BYEMONEY"
+} else {  // ← правильный else в конце
+  setErrorMessage("Insufficient tokens. Need 4164305 $skin or 1000000 $byemoney to mint.")
+  setShowErrorToast(true)
+  setIsMinting(false)
+  return
+}
 
       console.log("Uploading NFT metadata...")
       console.log("Using pre-generated image:", generatedImage.substring(0, 50) + "...")
