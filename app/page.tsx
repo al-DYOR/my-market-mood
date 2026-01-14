@@ -553,6 +553,10 @@ export default function Home() {
   const checkTokenBalances = async () => {
     if (!walletAddress) return
     try {
+      if (!publicClient) {
+  console.error("Public client not available")
+  return
+}
       const skinBal = await publicClient.readContract({
         address: CONFIG.SKIN_TOKEN as `0x${string}`,
         abi: ERC20_ABI,
@@ -562,6 +566,10 @@ export default function Home() {
       setSkinBalance(skinBal as bigint)
       setSkinRequired(CONFIG.SKIN_REQUIRED)
 
+      if (!publicClient) {
+  console.error("Public client not available")
+  return
+}
       const byemoneyBal = await publicClient.readContract({
         address: CONFIG.BYEMONEY_TOKEN as `0x${string}`,
         abi: ERC20_ABI,
