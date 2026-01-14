@@ -4,22 +4,76 @@ import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import MiniKitWrapper from "./MiniKitWrapper"
-import { Providers } from './providers'; // ← НОВЫЙ ИМПОРТ
+import { Providers } from './providers'
 
 const geist = Geist({ subsets: ["latin"] })
 const geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Market Mood today",
-  description: "Your current state based on today's market and your on-chain identity",
+  description: "Your current state based on today's market and on-chain identity",
   generator: "v0.app",
+
+  // Обязательно для PWA / Base App / Farcaster embedded
+  manifest: "/.well-known/farcaster.json",  // ← твой манифест
+
+  // Иконки — расширяем для всех платформ
   icons: {
     icon: [
       { url: "/icon-light-32x32.png", media: "(prefers-color-scheme: light)" },
       { url: "/icon-dark-32x32.png", media: "(prefers-color-scheme: dark)" },
       { url: "/icon.svg", type: "image/svg+xml" },
+      // Добавляем стандартные размеры для Android/PWA/Base App
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
-    apple: "/apple-icon.png",
+    shortcut: "/icon-192.png",
+    apple: [
+      { url: "/apple-icon.png", sizes: "180x180" },
+      { url: "/apple-icon-120x120.png", sizes: "120x120" },
+      { url: "/apple-icon-152x152.png", sizes: "152x152" },
+      { url: "/apple-icon-167x167.png", sizes: "167x167" },
+      { url: "/apple-icon-180x180.png", sizes: "180x180" },
+    ],
+  },
+
+  // Делает приложение нативным на iOS (Base App использует)
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Market Mood today",
+  },
+
+  // Цвета приложения (влияет на статус-бар и сплеш)
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+  ],
+
+  // Open Graph — для шаринга в Farcaster, X, Telegram и т.д.
+  openGraph: {
+    title: "Market Mood today",
+    description: "Mint your trading state as unique pixel monster NFT (0.00002 ETH)",
+    url: "https://v0-mymarketmood.vercel.app/",
+    siteName: "Market Mood",
+    images: [
+      {
+        url: "/opengraph-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Market Mood NFT Preview",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+
+  // Twitter/X card (Warpcast тоже использует)
+  twitter: {
+    card: "summary_large_image",
+    title: "Market Mood today",
+    description: "Mint your trading state NFT",
+    images: ["/opengraph-image.jpg"],
   },
 }
 
@@ -31,36 +85,37 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <title>Market Mood Today</title>
-        <meta name="description" content="Your current state based on today's market and your on-chain identity" />
+        {/* Обязательно для PWA / Base App / Farcaster */}
+        <link rel="manifest" href="/.well-known/farcaster.json" />
 
-         {/* ✅ Farcaster баннер */}
+        {/* Для нативного вида */}
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="theme-color" content="#000000" />
+
+        {/* Open Graph / Twitter — ты уже добавил, но можно оставить */}
         <meta property="og:title" content="Market Mood Today" />
         <meta property="og:description" content="Mint your trading state as unique pixel monster NFT (0.00002 ETH)" />
         <meta property="og:image" content="/opengraph-image.jpg" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://v0-mymarketmood.vercel.app/" />
-        
-        {/* Twitter Card (Warpcast тоже использует) */}
+
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Market Mood Today" />
         <meta name="twitter:description" content="Mint your trading state NFT" />
         <meta name="twitter:image" content="/opengraph-image.jpg" />
 
-        {/* Иконки */}
+        {/* Иконки — можно оставить твои */}
         <link rel="icon" href="/icon-512.png" type="image/png" sizes="512x512" />
         <link rel="icon" href="/icon-512.png" type="image/png" />
         <link rel="apple-touch-icon" href="/icon-512.png" sizes="512x512" />
         <link rel="mask-icon" href="/icon-512.png" color="#000000" />
-
-        {/* Тема */}
-        <meta name="theme-color" content="#000000" />
       </head>
-
       <body className={`${geist.className} ${geistMono.className} antialiased`}>
-          <MiniKitWrapper />
-          <Providers>{children}</Providers>
-          <Analytics />
+        <MiniKitWrapper />
+        <Providers>{children}</Providers>
+        <Analytics />
       </body>
     </html>
   )
