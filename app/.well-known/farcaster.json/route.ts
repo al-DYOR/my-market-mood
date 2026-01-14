@@ -18,6 +18,8 @@ export async function GET() {
       splashImageUrl: "https://v0-mymarketmood.vercel.app/splash.png",
       splashBackgroundColor: "#000000",
       imageUrl: "https://v0-mymarketmood.vercel.app/opengraph-image.png",
+      heroImageURL: "https://v0-mymarketmood.vercel.app/opengraph-image.png",
+      ogImageURL: "https://v0-mymarketmood.vercel.app/og-image.png",
       buttonTitle: "Open Market Mood",
       primaryCategory: "utility",
       tags: ["market", "mood", "onchain", "identity", "base"],
