@@ -15,11 +15,12 @@ export async function GET() {
       description: "Your current state based on today's market and on-chain identity",
       homeUrl: "https://v0-mymarketmood.vercel.app/",
       iconUrl: "https://v0-mymarketmood.vercel.app/icon-512.png",
+      splashImageUrl": "https://v0-mymarketmood.vercel.app/splash.png",
       splashBackgroundColor: "#000000",
       imageUrl: "https://v0-mymarketmood.vercel.app/opengraph-image.png",
       buttonTitle: "Open Market Mood",
       primaryCategory: "utility",
-      tags: ["market", "mood", "onchain", "base"],
+      tags: ["market", "mood", "onchain", "identity", "base"],
     },
   })
 }
