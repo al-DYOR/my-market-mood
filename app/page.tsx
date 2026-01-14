@@ -816,6 +816,13 @@ const burnTxHash = await (async () => {
 
       setMintSuccess("NFT minted successfully!")
       console.log("Mint completed successfully!")
+
+      // 🔥 Фикс: принудительно обновить балансы через 1 сек
+setTimeout(async () => {
+  await checkTokenBalances()
+  console.log("✅ Balances reloaded after mint")
+}, 1500)
+      
       await checkTokenBalances()
     } catch (error: any) {
       console.error("Mint error:", error)
