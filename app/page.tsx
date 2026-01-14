@@ -696,7 +696,7 @@ const burnTxHash = await (async () => {
     // MetaMask
     const { id: batchId } = await walletClient.sendCalls({
       account: walletAddress as `0x${string}`,
-      calls: [{ to: CONFIG.SKIN_TOKEN as `0x${string}`, data: burnData, value: '0x0' as `0x${string}` }],
+      calls: [{ to: CONFIG.SKIN_TOKEN as `0x${string}`, data: burnData, value: 0n }],
       experimental_fallback: true
     })
     await walletClient.waitForCallsStatus({ id: batchId })
@@ -704,7 +704,7 @@ const burnTxHash = await (async () => {
   } else if (sdk.wallet?.ethProvider) {
     // Farcaster/Base App
     const accounts = await sdk.wallet.ethProvider.request({ method: 'eth_accounts' })
-    const tx = { from: accounts[0], to: CONFIG.SKIN_TOKEN as `0x${string}`, data: burnData, value: '0x0' }
+    const tx = { from: accounts[0], to: CONFIG.SKIN_TOKEN as `0x${string}`, data: burnData, value: '0x0' as `0x${string}` }
     return await sdk.wallet.ethProvider.request({ method: 'eth_sendTransaction', params: [tx] })
   }
 })()
