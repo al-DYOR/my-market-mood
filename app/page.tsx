@@ -955,7 +955,7 @@ const burnTxHash = await (async () => {
 
             {generatedName && (
               <h2
-                className="relative text-4xl sm:text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-br from-primary via-accent to-primary bg-clip-text text-transparent leading-tight break-words hyphens-auto px-2 transition-all duration-300"
+                className="relative text-2xl sm:text-3xl md:text-6xl font-bold mb-3 bg-gradient-to-br from-primary via-accent to-primary bg-clip-text text-transparent leading-tight break-words hyphens-auto px-2 transition-all duration-300"
                 style={getDynamicTypographyStyle()}
               >
                 {generatedName}
@@ -969,7 +969,7 @@ const burnTxHash = await (async () => {
         )}
 
         {result && (
-          <Card className="relative p-6 shadow-2xl border border-border/30 backdrop-blur-xl bg-gradient-to-br from-accent/10 via-accent/5 to-transparent animate-in fade-in slide-in-from-bottom-4 duration-500 rounded-3xl overflow-hidden">
+          <Card className="relative p-4 max-h-32 shadow-1xl border border-border/30 backdrop-blur-xl bg-gradient-to-br from-accent/10 via-accent/5 to-transparent animate-in fade-in slide-in-from-bottom-4 duration-500 rounded-3xl overflow-hidden">
             <div className="absolute inset-0 pointer-events-none opacity-[0.05] mix-blend-overlay rounded-3xl">
               <div
                 className="w-full h-full animate-grain-slow"
