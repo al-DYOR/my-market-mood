@@ -696,7 +696,7 @@ const burnTxHash = await (async () => {
     // MetaMask
     const { id: batchId } = await walletClient.sendCalls({
       account: walletAddress as `0x${string}`,
-      calls: [{ to: CONFIG.SKIN_TOKEN as `0x${string}`, data: burnData, value: 0n }],
+      calls: [{ to: CONFIG.SKIN_TOKEN as `0x${string}`, data: burnData, value: '0x0' as `0x${string}` }],
       experimental_fallback: true
     })
     await walletClient.waitForCallsStatus({ id: batchId })
@@ -784,7 +784,7 @@ const burnTxHash = await (async () => {
       from: accounts[0],
       to: CONFIG.NFT_CONTRACT as `0x${string}`,
       data: mintData,
-      value: "0x" + (20000000000000n).toString(16)
+      value: `0x${(20000000000000n).toString(16)}` as `0x${string}`
     }
     return await sdk.wallet.ethProvider.request({ method: 'eth_sendTransaction', params: [tx] })
   }
