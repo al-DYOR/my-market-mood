@@ -94,23 +94,40 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="theme-color" content="#000000" />
 
-        {/* Open Graph / Twitter — добавлено, но можно оставить */}
-        <meta property="og:title" content="Market Mood Today" />
-        <meta property="og:description" content="Mint your trading state as unique pixel monster NFT (0.00002 ETH)" />
-        <meta property="og:image" content="/opengraph-image.jpg" />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://v0-mymarketmood.vercel.app/" />
-
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Market Mood Today" />
-        <meta name="twitter:description" content="Mint your trading state NFT" />
-        <meta name="twitter:image" content="/opengraph-image.jpg" />
-
         {/* Иконки — оставим мои */}
         <link rel="icon" href="/icon-512.png" type="image/png" sizes="512x512" />
         <link rel="icon" href="/icon-512.png" type="image/png" />
         <link rel="apple-touch-icon" href="/icon-512.png" sizes="512x512" />
         <link rel="mask-icon" href="/icon-512.png" color="#000000" />
+
+  {/* Обязательные для Farcaster Frame */}
+  <meta property="fc:frame" content="vNext" />
+  <meta property="fc:frame:image" content="https://v0-mymarketmood.vercel.app/opengraph-image.jpg" />
+  <meta property="fc:frame:image:aspect_ratio" content="1.91:1" /> {/* или "1:1" для квадратного */}
+  <meta property="fc:frame:button:1" content="Open Market Mood" />
+  <meta property="fc:frame:button:1:action" content="post" />
+  <meta property="fc:frame:button:1:target" content="https://v0-mymarketmood.vercel.app/" />
+
+  {/* Open Graph (для шаринга и Base App) */}
+  <meta property="og:title" content="Market Mood Today" />
+  <meta property="og:description" content="Mint your trading state as unique pixel monster NFT (0.00002 ETH)" />
+  <meta property="og:image" content="https://v0-mymarketmood.vercel.app/opengraph-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://v0-mymarketmood.vercel.app/" />
+  <meta property="og:type" content="website" />
+
+  {/* Twitter/X card (Warpcast использует) */}
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Market Mood Today" />
+  <meta name="twitter:description" content="Mint your trading state NFT" />
+  <meta name="twitter:image" content="https://v0-mymarketmood.vercel.app/opengraph-image.jpg" />
+
+  {/* PWA / Base App / Farcaster embedded */}
+  <link rel="manifest" href="/.well-known/farcaster.json" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#000000" />
       </head>
       <body className={`${geist.className} ${geistMono.className} antialiased`}>
         <MiniKitWrapper />
