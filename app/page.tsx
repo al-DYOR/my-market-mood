@@ -313,13 +313,6 @@ export default function Home() {
   const publicClient = usePublicClient({ chainId: 8453 })
 
   useEffect(() => {
-    sdk.actions
-      .ready()
-      .then(() => console.log("[Farcaster] sdk.ready()"))
-      .catch((err) => console.error("[Farcaster] ready failed", err))
-  }, [])
-
-  useEffect(() => {
     if (walletAddress) {
       checkTokenBalances()
       fetchFarcasterFid(walletAddress)
