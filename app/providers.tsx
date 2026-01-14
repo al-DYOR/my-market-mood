@@ -8,12 +8,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 const queryClient = new QueryClient()
 
 const config = createConfig({
-  // chains убрали — Wagmi берёт их из transports
+  chains: [base],  // добавляем
   transports: {
-    [base.id]: http(),  // ← только это обязательно
+    [base.id]: http(),
   },
-  // опционально: если нужно явно указать цепочки для автодетекта
-  // chains: [base],
 })
 
 export function Providers({ children }: { children: React.ReactNode }) {
