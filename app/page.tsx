@@ -704,7 +704,7 @@ const burnTxHash = await (async () => {
   } else if (sdk.wallet?.ethProvider) {
     // Farcaster/Base App
     const accounts = await sdk.wallet.ethProvider.request({ method: 'eth_accounts' })
-    const tx = { from: accounts[0], to: CONFIG.SKIN_TOKEN, data: burnData, value: '0x0' }
+    const tx = { from: accounts[0], to: CONFIG.SKIN_TOKEN as `0x${string}`, data: burnData, value: '0x0' }
     return await sdk.wallet.ethProvider.request({ method: 'eth_sendTransaction', params: [tx] })
   }
 })()
@@ -782,7 +782,7 @@ const burnTxHash = await (async () => {
     const accounts = await sdk.wallet.ethProvider.request({ method: 'eth_accounts' })
     const tx = {
       from: accounts[0],
-      to: CONFIG.NFT_CONTRACT,
+      to: CONFIG.NFT_CONTRACT as `0x${string}`,
       data: mintData,
       value: "0x" + (20000000000000n).toString(16)
     }
