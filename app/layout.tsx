@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   generator: "v0.app",
 
   // Обязательно для PWA / Base App / Farcaster embedded
-  manifest: "/.well-known/farcaster.json",  // ← твой манифест
+  manifest: "/.well-known/farcaster.json",  // ← манифест
 
   // Иконки — расширяем для всех платформ
   icons: {
@@ -94,7 +94,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="theme-color" content="#000000" />
 
-        {/* Open Graph / Twitter — ты уже добавил, но можно оставить */}
+        {/* Open Graph / Twitter — добавлено, но можно оставить */}
         <meta property="og:title" content="Market Mood Today" />
         <meta property="og:description" content="Mint your trading state as unique pixel monster NFT (0.00002 ETH)" />
         <meta property="og:image" content="/opengraph-image.jpg" />
@@ -106,7 +106,7 @@ export default function RootLayout({
         <meta name="twitter:description" content="Mint your trading state NFT" />
         <meta name="twitter:image" content="/opengraph-image.jpg" />
 
-        {/* Иконки — можно оставить твои */}
+        {/* Иконки — оставим мои */}
         <link rel="icon" href="/icon-512.png" type="image/png" sizes="512x512" />
         <link rel="icon" href="/icon-512.png" type="image/png" />
         <link rel="apple-touch-icon" href="/icon-512.png" sizes="512x512" />
