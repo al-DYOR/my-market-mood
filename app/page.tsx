@@ -972,7 +972,7 @@ const burnTxHash = await (async () => {
         )}
 
         {result && (
-          <Card className="relative p-4 max-h-32 shadow-1xl border border-border/30 backdrop-blur-xl bg-gradient-to-br from-accent/10 via-accent/5 to-transparent animate-in fade-in slide-in-from-bottom-4 duration-500 rounded-3xl overflow-hidden">
+          <Card className="relative p-4 shadow-1xl border border-border/30 backdrop-blur-xl bg-gradient-to-br from-accent/10 via-accent/5 to-transparent animate-in fade-in slide-in-from-bottom-4 duration-500 rounded-3xl overflow-hidden">
             <div className="absolute inset-0 pointer-events-none opacity-[0.05] mix-blend-overlay rounded-3xl">
               <div
                 className="w-full h-full animate-grain-slow"
