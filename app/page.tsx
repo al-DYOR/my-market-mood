@@ -1042,7 +1042,8 @@ export default function Home() {
         />
       </div>
       {isByemoneySatisfied && <CheckCircle2 className="w-6 h-6 text-green-500" />}
-    </div>
+     </div>
+   </div>
   </div>
 </div>
 
