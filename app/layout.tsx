@@ -17,6 +17,11 @@ export const metadata: Metadata = {
   // Обязательно для PWA / Base App / Farcaster embedded
   manifest: "/.well-known/farcaster.json",  // ← манифест
 
+  // * 🔥 Base App верификация */
+  other: {
+    'base:app_id': '69672cf14991800a6d9d61ff',
+  },
+
   // Иконки — расширяем для всех платформ
   icons: {
     icon: [
@@ -87,9 +92,6 @@ export default function RootLayout({
       <head>
         {/* Обязательно для PWA / Base App / Farcaster */}
         <link rel="manifest" href="/.well-known/farcaster.json" />
-
-        {/* 🔥 Base App верификация */}
-        <meta name="base:app_id" content="69672cf14991800a6d9d61ff" />
 
         {/* Для нативного вида */}
         <meta name="mobile-web-app-capable" content="yes" />
