@@ -1001,51 +1001,50 @@ export default function Home() {
               </p>
 
               <div className="space-y-3">
-                <div
-                  className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
-                    isSkinSatisfied ? "border-green-500/50 bg-green-500/10" : "border-border/30 bg-muted/20"
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div
-                      className="group cursor-pointer hover:scale-105 transition-all"
-                      onClick={() => sdk.actions.openUrl(`https://warpcast.com/~/token/${CONFIG.SKIN_TOKEN}`)}
-                    >
-                      <TokenLabel
-                        symbol="skin"
-                        amount={formatBigInt(skinRequired)}
-                        address={CONFIG.SKIN_TOKEN}
-                        subtitle="Burn to mint"
-                      />
-                    </div>
-                    {isSkinSatisfied && <CheckCircle2 className="w-6 h-6 text-green-500" />}
-                  </div>
-                </div>
+  {/* SKIN — всегда показываем */}
+  <div
+    className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
+      isSkinSatisfied ? "border-green-500/50 bg-green-500/10" : "border-border/30 bg-muted/20"
+    }`}
+  >
+    <div className="flex items-center justify-between">
+      <div
+        className="group cursor-pointer hover:scale-105 transition-all"
+        onClick={() => sdk.actions.openUrl(`https://warpcast.com/~/token/${CONFIG.SKIN_TOKEN}`)}
+      >
+        <TokenLabel
+          symbol="skin"
+          amount={formatBigInt(skinRequired)}
+          address={CONFIG.SKIN_TOKEN}
+          subtitle="Burn to mint"
+        />
+      </div>
+      {isSkinSatisfied && <CheckCircle2 className="w-6 h-6 text-green-500" />}
+    </div>
+  </div>
 
-                {!isSkinSatisfied && (
-                  <div
-                    className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
-                      isByemoneySatisfied ? "border-green-500/50 bg-green-500/10" : "border-border/30 bg-muted/20"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div
-                        className="group cursor-pointer hover:scale-105 transition-all"
-                        onClick={() => sdk.actions.openUrl(`https://warpcast.com/~/token/${CONFIG.BYEMONEY_TOKEN}`)}
-                      >
-                        <TokenLabel
-                          symbol="byemoney"
-                          amount={formatBigInt(byemoneyRequired)}
-                          address={CONFIG.BYEMONEY_TOKEN}
-                          subtitle="Hold to mint"
-                        />
-                      </div>
-                      {isByemoneySatisfied && <CheckCircle2 className="w-6 h-6 text-green-500" />}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
+  {/* BYEMONEY — всегда показываем, независимо от SKIN */}
+  <div
+    className={`p-4 rounded-2xl border-2 transition-all duration-300 ${
+      isByemoneySatisfied ? "border-green-500/50 bg-green-500/10" : "border-border/30 bg-muted/20"
+    }`}
+  >
+    <div className="flex items-center justify-between">
+      <div
+        className="group cursor-pointer hover:scale-105 transition-all"
+        onClick={() => sdk.actions.openUrl(`https://warpcast.com/~/token/${CONFIG.BYEMONEY_TOKEN}`)}
+      >
+        <TokenLabel
+          symbol="byemoney"
+          amount={formatBigInt(byemoneyRequired)}
+          address={CONFIG.BYEMONEY_TOKEN}
+          subtitle="Hold to mint"
+        />
+      </div>
+      {isByemoneySatisfied && <CheckCircle2 className="w-6 h-6 text-green-500" />}
+    </div>
+  </div>
+</div>
 
             <Button
               onClick={mintNFT}
