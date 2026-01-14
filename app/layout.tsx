@@ -89,7 +89,7 @@ export default function RootLayout({
         <link rel="manifest" href="/.well-known/farcaster.json" />
 
         {/* 🔥 Base App верификация */}
-        <meta name="base:app_id" content="69672cf14991800a6d9d61ff"
+        <meta name="base:app_id" content="69672cf14991800a6d9d61ff" />
 
         {/* Для нативного вида */}
         <meta name="mobile-web-app-capable" content="yes" />
