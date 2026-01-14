@@ -762,7 +762,7 @@ const burnTxHash = await (async () => {
         args: [metadataUploadResult.tokenURI],
       })
 
-      const mintHash = await (async () => {
+      const mintHash = await (async (): Promise<`0x${string}`> => {
   if (walletClient) {
     // MetaMask
     return await walletClient.writeContract({
@@ -781,13 +781,16 @@ const burnTxHash = await (async () => {
     })
     const accounts = await sdk.wallet.ethProvider.request({ method: 'eth_accounts' })
     const tx = {
-      from: accounts[0],
+      from: accounts[0] as `0x${string}`,
       to: CONFIG.NFT_CONTRACT as `0x${string}`,
       data: mintData,
       value: `0x${(20000000000000n).toString(16)}` as `0x${string}`
     }
     return await sdk.wallet.ethProvider.request({ method: 'eth_sendTransaction', params: [tx] })
   }
+
+  // Добавляем это:
+  throw new Error("No wallet available for mint")
 })()
 
       await publicClient.waitForTransactionReceipt({ hash: mintHash })
