@@ -9,7 +9,7 @@
     "name": "Market Mood Today",
     "iconUrl": "https://v0-mymarketmood.vercel.app/icon-512.png",
     "homeUrl": "https://v0-mymarketmood.vercel.app",
-    "imageUrl": "https://v0-mymarketmood.vercel.app/icon-512.png",
+    "imageUrl": "https://v0-mymarketmood.vercel.app/opengraph-image.png",
     "buttonTitle": "Check this out",
     "splashImageUrl": "https://v0-mymarketmood.vercel.app/splash.png",
     "splashBackgroundColor": "#eeccff",
