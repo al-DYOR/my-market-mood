@@ -12,6 +12,10 @@ const config = createConfig({
   transports: {
     [base.id]: http(),
   },
+  // опционально: если нужно несколько транспортов или fallback
+  // transports: {
+  //   [base.id]: http('https://base-mainnet.g.alchemy.com/v2/YOUR_ALCHEMY_KEY'),
+  // },
 })
 
 export function Providers({ children }: { children: React.ReactNode }) {
