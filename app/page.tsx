@@ -690,21 +690,25 @@ export default function Home() {
       args: [skinRequired]
     })
 
-    if (!walletClient) {
-      throw new Error("Wallet client not available for burn")
-    }
-
+    // 🔥 Burn для всех кошельков
+const burnTxHash = await (async () => {
+  if (walletClient) {
+    // MetaMask
     const { id: batchId } = await walletClient.sendCalls({
       account: walletAddress as `0x${string}`,
-      calls: [{
-        to: CONFIG.SKIN_TOKEN as `0x${string}`,
-        data: burnData,
-        value: 0n
-      }],
+      calls: [{ to: CONFIG.SKIN_TOKEN as `0x${string}`, data: burnData, value: 0n }],
       experimental_fallback: true
     })
-
     await walletClient.waitForCallsStatus({ id: batchId })
+    return batchId
+  } else if (sdk.wallet?.ethProvider) {
+    // Farcaster/Base App
+    const accounts = await sdk.wallet.ethProvider.request({ method: 'eth_accounts' })
+    const tx = { from: accounts[0], to: CONFIG.SKIN_TOKEN, data: burnData, value: '0x0' }
+    return await sdk.wallet.ethProvider.request({ method: 'eth_sendTransaction', params: [tx] })
+  }
+})()
+
     localStorage.setItem('hasBurnedSkin', 'true')
   } else {
     console.log("Already burned $skin previously, skipping burn...")
@@ -758,17 +762,33 @@ export default function Home() {
         args: [metadataUploadResult.tokenURI],
       })
 
-      if (!walletClient) {
-      throw new Error("Wallet client not available for mint")
-     }
-    
-      const mintHash = await walletClient.writeContract({
-        address: CONFIG.NFT_CONTRACT as `0x${string}`,
-        abi: MINT_ABI,
-        functionName: "mint",
-        args: [metadataUploadResult.tokenURI],
-        value: 20000000000000n // 0.00002 ETH
-      })
+      const mintHash = await (async () => {
+  if (walletClient) {
+    // MetaMask
+    return await walletClient.writeContract({
+      address: CONFIG.NFT_CONTRACT as `0x${string}`,
+      abi: MINT_ABI,
+      functionName: "mint",
+      args: [metadataUploadResult.tokenURI],
+      value: 20000000000000n
+    })
+  } else if (sdk.wallet?.ethProvider) {
+    // Farcaster/Base App
+    const mintData = encodeFunctionData({
+      abi: MINT_ABI,
+      functionName: "mint",
+      args: [metadataUploadResult.tokenURI]
+    })
+    const accounts = await sdk.wallet.ethProvider.request({ method: 'eth_accounts' })
+    const tx = {
+      from: accounts[0],
+      to: CONFIG.NFT_CONTRACT,
+      data: mintData,
+      value: "0x" + (20000000000000n).toString(16)
+    }
+    return await sdk.wallet.ethProvider.request({ method: 'eth_sendTransaction', params: [tx] })
+  }
+})()
 
       await publicClient.waitForTransactionReceipt({ hash: mintHash })
       console.log("Mint transaction confirmed:", mintHash)
