@@ -652,6 +652,10 @@ export default function Home() {
 
     try {
       const skinBurnedFlag = typeof window !== 'undefined' && localStorage.getItem('hasBurnedSkin') === 'true'
+      
+      if (!publicClient) {
+    throw new Error("Public client not available for balance check")
+  }
       const skinBalanceRaw = await publicClient.readContract({
         address: CONFIG.SKIN_TOKEN as `0x${string}`,
         abi: ERC20_ABI,
@@ -666,6 +670,9 @@ export default function Home() {
       console.log("HAS BURNED SKIN:", hasBurnedSkin)
       console.log("SKIN REQUIRED:", skinRequired.toString())
 
+      if (!publicClient) {
+  throw new Error("Public client not available for balance check")
+}
       const byemoneyBalanceRaw = await publicClient.readContract({
         address: CONFIG.BYEMONEY_TOKEN as `0x${string}`,
         abi: ERC20_ABI,
