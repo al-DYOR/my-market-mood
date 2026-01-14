@@ -106,7 +106,7 @@ export default function RootLayout({
   <meta property="fc:frame:image:aspect_ratio" content="1.91:1" /> {/* или "1:1" для квадратного */}
   <meta property="fc:frame:button:1" content="Open Market Mood" />
   <meta property="fc:frame:button:1:action" content="post" />
-  <meta property="fc:frame:button:1:target" content="https://v0-mymarketmood.vercel.app/" />
+  <meta property="fc:frame:button:1:target" content="https://v0-mymarketmood.vercel.app/api/frame" />  {/* ← сюда указываем на наш новый endpoint */}
 
   {/* Open Graph (для шаринга и Base App) */}
   <meta property="og:title" content="Market Mood Today" />
