@@ -163,8 +163,11 @@ export default function RootLayout({
     <Analytics />
   </OnchainKitProvider>
 */}
-        <MiniKitWrapper />
-  <Providers>{children}</Providers>
+        
+  <Providers>
+  <MiniKitWrapper />
+  {children}
+</Providers>
   <Analytics />
 </body>
     </html>
