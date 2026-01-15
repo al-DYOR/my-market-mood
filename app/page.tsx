@@ -316,7 +316,7 @@ export default function Home() {
   if (typeof sdk !== 'undefined') {
     sdk.actions.ready(); // 🔥 Base App ТРЕБУЕТ!
     }
-  }, , [])
+  }, [])
     
   useEffect(() => {
     if (walletAddress) {
