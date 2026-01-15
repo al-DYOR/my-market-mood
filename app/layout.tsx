@@ -158,6 +158,21 @@ export default function RootLayout({
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="theme-color" content="#000000" />
+
+        {/* ← ВЕРИФИКАЦИЯ ДЛЯ БЕЙЗ АПП */}
+      <script dangerouslySetInnerHTML={{
+        __html: `
+          window.addEventListener('load', () => {
+            if (navigator.userAgent.includes('Base') || window.location.hash.includes('base-app')) {
+              document.documentElement.setAttribute('base-app', 'true');
+              document.body.style.margin = '0';
+              document.body.style.paddingTop = 'env(safe-area-inset-top)';
+              window.dispatchEvent(new CustomEvent('baseready'));
+            }
+          });
+        `
+      }} />
+        
       </head>
       <body className={`${geist.className} ${geistMono.className} antialiased`}>
  {/*
