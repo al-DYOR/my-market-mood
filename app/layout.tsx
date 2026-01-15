@@ -156,13 +156,13 @@ export default function RootLayout({
   <meta name="theme-color" content="#000000" />
       </head>
       <body className={`${geist.className} ${geistMono.className} antialiased`}>
-  {/* 
+ 
   <OnchainKitProvider chain={base}>
     <MiniKitWrapper />
     <Providers>{children}</Providers>
     <Analytics />
   </OnchainKitProvider>
-  */}
+
 </body>
     </html>
   )
