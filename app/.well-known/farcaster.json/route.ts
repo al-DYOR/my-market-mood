@@ -24,6 +24,7 @@ export async function GET() {
       ],
       primaryCategory: "utility",
       tags: ["market", "mood", "onchain", "identity", "base"],
+       appId: "69672cf14991800a6d9d61ff"  // 🔥 ДОБАВЛЕНО!
     },
   })
 }
