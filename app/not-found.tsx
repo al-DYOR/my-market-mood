@@ -38,4 +38,4 @@ export default function NotFound() {
 
 // Только для этой страницы — отключает prerendering 404 и кэширование
 export const dynamic = 'force-dynamic'
-export const revalidate = 0
+// export const revalidate = 0 отключаем так как билд падает
