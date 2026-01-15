@@ -1,13 +1,13 @@
 "use client"
 import { useEffect } from "react"
-import { sdk } from "@farcaster/miniapp-sdk"  // ← остаётся!
-import { useMiniKit } from "@coinbase/onchainkit"  // ← правильный путь
+import { sdk } from "@farcaster/miniapp-sdk"  // ← для Farcaster
+import { useMiniKit } from "@coinbase/onchainkit/minikit"  // ← для Base app!
 
 export default function MiniKitWrapper() {
   const { setFrameReady, isFrameReady } = useMiniKit()
 
   useEffect(() => {
-    // Farcaster / Warpcast — оригинальный вызов, не меняем
+    // Farcaster / Warpcast — оригинал
     if (typeof sdk !== 'undefined') {
       sdk.actions
         .ready()
@@ -19,7 +19,7 @@ export default function MiniKitWrapper() {
         })
     }
 
-    // Base App + общая готовность (OnchainKit должен понять контекст)
+    // Base App + общая готовность
     if (!isFrameReady) {
       setFrameReady()
     }
