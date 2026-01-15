@@ -110,7 +110,7 @@ export default function RootLayout({
         <link rel="mask-icon" href="/icon-512.png" color="#000000" />
 
         {/* 🔥🔥 BASE APP CRITICAL — СТРОКА 🔥🔥 */}
-  <meta name="base:app_id" content="69672cf14991800a6d9d61ff" />
+  <meta name="base:app_id" content="v0-mymarketmood" />
         
         {/* 🔥 BASE APP EMBED */}
   <meta name="fc:miniapp" content='{
