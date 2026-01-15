@@ -310,6 +310,22 @@ export default function Home() {
   const [skinRequired, setSkinRequired] = useState<bigint>(CONFIG.SKIN_REQUIRED)
   const [byemoneyRequired, setByemoneyRequired] = useState<bigint>(CONFIG.BYEMONEY_REQUIRED)
 
+  // ← ВСТАВЛЯЕМ ТУТ useEffect (МЕЖДУ useState и wagmi hooks):
+  useEffect(() => {
+    // Проверка Base App UserAgent
+    if (navigator.userAgent.includes('Base') || /baseapp/i.test(navigator.userAgent)) {
+      // Принудительно нативный режим
+      document.documentElement.style.setProperty('--base-app', 'true');
+      document.body.style.paddingTop = 'env(safe-area-inset-top)';
+      document.body.style.paddingBottom = 'env(safe-area-inset-bottom)';
+      
+      // Сигнал готовности
+      setTimeout(() => {
+        document.dispatchEvent(new CustomEvent('baseready'));
+      }, 500);
+    }
+  }, []);
+  
   const { data: walletClient } = useWalletClient()
   const publicClient = usePublicClient({ chainId: 8453 })
 
