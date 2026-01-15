@@ -342,38 +342,40 @@ export default function Home() {
   }, [generatedName, sliders, farcasterPfp])
 
   const connectWallet = async () => {
-    try {
-      setIsConnecting(true)
-
-      // if (typeof window !== "undefined" && window.ethereum) {
-        // const accounts = await window.ethereum.request({
-         // method: "eth_requestAccounts",
-       // })
-       // setWalletAddress(accounts[0])
-       // console.log("[MetaMask] Connected:", accounts[0])
-       // return
-     // }
-      if (typeof sdk !== 'undefined') {
-        if (sdk.wallet?.ethProvider) {
-          const accounts = await sdk.wallet.ethProvider.request({ method: 'eth_accounts' })
-          if (accounts?.length > 0) {
-            setWalletAddress(accounts[0])
-            console.log("[Farcaster Wallet] Connected:", accounts[0])
-            return
-          }
+  try {
+    setIsConnecting(true)
+    try { // Добавили try-catch, чтобы не крашить от redefine
+      if (typeof window !== "undefined" && window.ethereum) {
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts",
+        })
+        setWalletAddress(accounts[0])
+        console.log("[MetaMask] Connected:", accounts[0])
+        return
+      }
+    } catch (metamaskError) {
+      console.error("MetaMask connection error, falling back:", metamaskError)
+    }
+    if (typeof sdk !== 'undefined') {
+      if (sdk.wallet?.ethProvider) {
+        const accounts = await sdk.wallet.ethProvider.request({ method: 'eth_accounts' })
+        if (accounts?.length > 0) {
+          setWalletAddress(accounts[0])
+          console.log("[Farcaster Wallet] Connected:", accounts[0])
+          return
         }
       }
-
-      setErrorMessage("MetaMask required. Farcaster wallet support coming soon.")
-      setShowErrorToast(true)
-    } catch (error) {
-      console.error("Connection failed:", error)
-      setErrorMessage("Connection failed. Please try MetaMask.")
-      setShowErrorToast(true)
-    } finally {
-      setIsConnecting(false)
     }
+    setErrorMessage("MetaMask required. Farcaster wallet support coming soon.")
+    setShowErrorToast(true)
+  } catch (error) {
+    console.error("Connection failed:", error)
+    setErrorMessage("Connection failed. Please try MetaMask.")
+    setShowErrorToast(true)
+  } finally {
+    setIsConnecting(false)
   }
+}
 
   const disconnectWallet = () => {
     setWalletAddress(null)
