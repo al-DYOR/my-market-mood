@@ -105,6 +105,9 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icon-512.png" sizes="512x512" />
         <link rel="mask-icon" href="/icon-512.png" color="#000000" />
 
+        {/* 🔥🔥 BASE APP CRITICAL — СТРОКА 🔥🔥 */}
+  <meta name="base:app_id" content="69672cf14991800a6d9d61ff" />
+
   {/* Обязательные для Farcaster Frame */}
   <meta property="fc:frame" content="vNext" />
   <meta property="fc:frame:image" content="https://v0-mymarketmood.vercel.app/opengraph-image.jpg" />
