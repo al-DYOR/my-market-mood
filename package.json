@@ -63,7 +63,7 @@
     "@tanstack/react-query": "^5.0.0",
     "zod": "3.25.76",
     "@farcaster/miniapp-sdk": "latest",
-    "@coinbase/onchainkit": "0.40.0"
+    "@coinbase/onchainkit": "0.38.0",
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.9",
