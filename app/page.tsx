@@ -10,6 +10,7 @@ import { encodeFunctionData } from "viem"
 import { CheckCircle2 } from "lucide-react"
 import { Copy, Check } from "lucide-react"
 import { useWalletClient, usePublicClient } from 'wagmi'
+import { useMiniKit } from '@coinbase/onchainkit' // или '@coinbase/onchainkit/minikit', если build ругается
 
 function TokenLabel({
   symbol,
@@ -311,6 +312,14 @@ export default function Home() {
 
   const { data: walletClient } = useWalletClient()
   const publicClient = usePublicClient({ chainId: 8453 })
+
+  const { setFrameReady, isFrameReady } = useMiniKit()
+
+useEffect(() => {
+  if (!isFrameReady) {
+    setFrameReady() // Сигнал "приложение готово" для Base App и Farcaster
+  }
+}, [setFrameReady, isFrameReady])
 
   useEffect(() => {
   if (typeof sdk !== 'undefined') {
