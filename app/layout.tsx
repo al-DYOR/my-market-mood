@@ -107,6 +107,20 @@ export default function RootLayout({
 
         {/* 🔥🔥 BASE APP CRITICAL — СТРОКА 🔥🔥 */}
   <meta name="base:app_id" content="69672cf14991800a6d9d61ff" />
+        
+        {/* 🔥 BASE APP EMBED */}
+  <meta name="fc:miniapp" content='{
+    "version": "next",
+    "imageUrl": "https://v0-mymarketmood.vercel.app/opengraph-image.jpg",
+    "button": {
+      "title": "Mint Mood NFT",
+      "action": {
+        "type": "launch_miniapp",
+        "name": "Market Mood Today",
+        "url": "https://v0-mymarketmood.vercel.app/"
+      }
+    }
+  }' />
 
   {/* Обязательные для Farcaster Frame */}
   <meta property="fc:frame" content="vNext" />
