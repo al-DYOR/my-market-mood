@@ -4,6 +4,8 @@ import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import MiniKitWrapper from "./MiniKitWrapper"
+import { OnchainKitProvider } from '@coinbase/onchainkit'
+import { base } from 'viem/chains'
 import { Providers } from './providers'
 
 const geist = Geist({ subsets: ["latin"] })
