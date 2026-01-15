@@ -114,7 +114,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
         {/* 🔥🔥 BASE APP CRITICAL — СТРОКА 🔥🔥 */}
-  <meta name="base:app_id" content="v0-mymarketmood" />
+  <meta name="base:app_id" content="69672cf14991800a6d9d61ff" />
         
         {/* 🔥 BASE APP EMBED */}
   <meta name="fc:miniapp" content='{
