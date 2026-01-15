@@ -10,7 +10,7 @@ import { encodeFunctionData } from "viem"
 import { CheckCircle2 } from "lucide-react"
 import { Copy, Check } from "lucide-react"
 import { useWalletClient, usePublicClient } from 'wagmi'
-import { useMiniKit } from '@coinbase/onchainkit' // или '@coinbase/onchainkit/minikit', если build ругается
+import { useMiniKit } from '@coinbase/onchainkit/minikit' // или '@coinbase/onchainkit', если build ругается
 
 function TokenLabel({
   symbol,
