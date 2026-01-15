@@ -11,6 +11,8 @@ import { Providers } from './providers'
 const geist = Geist({ subsets: ["latin"] })
 const geistMono = Geist_Mono({ subsets: ["latin"] })
 
+export const dynamic = 'force-dynamic' // Отключает prerendering всех страниц, включая _not-found
+
 export const metadata: Metadata = {
   title: "Market Mood today",
   description: "Your current state based on today's market and on-chain identity",
