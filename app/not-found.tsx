@@ -1,4 +1,4 @@
-'use client'
+'use client' // Отключает prerendering — Next.js не будет генерировать внутреннюю _not-found
 
 export default function NotFound() {
   return (
@@ -18,11 +18,24 @@ export default function NotFound() {
       <p style={{ fontSize: '1.2rem', marginBottom: '40px' }}>
         Sorry, the page you are looking for does not exist.
       </p>
-      <a href="/" style={{ color: '#00ff9d', textDecoration: 'underline', fontSize: '1.5rem' }}>
+      <a 
+        href="/" 
+        style={{ 
+          color: '#00ff9d', 
+          textDecoration: 'underline', 
+          fontSize: '1.5rem', 
+          padding: '12px 24px', 
+          border: '2px solid #00ff9d', 
+          borderRadius: '12px',
+          background: 'rgba(0, 255, 157, 0.1)'
+        }}
+      >
         Back to Home
       </a>
     </div>
   )
-  export const dynamic = 'force-dynamic' // Только для этой страницы — отключает prerendering 404
-  export const revalidate = 0 // Отключает кэширование
 }
+
+// Только для этой страницы — отключает prerendering 404 и кэширование
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
