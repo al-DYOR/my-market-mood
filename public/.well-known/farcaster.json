@@ -14,5 +14,16 @@
     "splashImageUrl": "https://v0-mymarketmood.vercel.app/splash.png",
     "splashBackgroundColor": "#eeccff",
     "webhookUrl": "https://v0-mymarketmood.vercel.app/api/webhook"
+  },
+  "miniapp": {
+    "name": "Market Mood Today",
+    "iconUrl": "https://v0-mymarketmood.vercel.app/icon-512.png",
+    "screenshotUrls": [
+      "https://v0-mymarketmood.vercel.app/screenshot1.png",
+      "https://v0-mymarketmood.vercel.app/screenshot2.png",
+      "https://v0-mymarketmood.vercel.app/screenshot3.png"
+    ],
+    "primaryCategory": "utility",
+    "appId": "69672cf14991800a6d9d61ff"
   }
 }
