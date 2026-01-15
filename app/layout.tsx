@@ -109,10 +109,6 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icon-512.png" sizes="512x512" />
         <link rel="mask-icon" href="/icon-512.png" color="#000000" />
 
-        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-
         {/* 🔥🔥 BASE APP CRITICAL — СТРОКА 🔥🔥 */}
   <meta name="base:app_id" content="69672cf14991800a6d9d61ff" />
         
