@@ -23,4 +23,6 @@ export default function NotFound() {
       </a>
     </div>
   )
+  export const dynamic = 'force-dynamic' // Только для этой страницы — отключает prerendering 404
+  export const revalidate = 0 // Отключает кэширование
 }
