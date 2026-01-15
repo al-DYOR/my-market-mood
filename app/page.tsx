@@ -345,15 +345,14 @@ export default function Home() {
     try {
       setIsConnecting(true)
 
-      if (typeof window !== "undefined" && window.ethereum) {
-        const accounts = await window.ethereum.request({
-          method: "eth_requestAccounts",
-        })
-        setWalletAddress(accounts[0])
-        console.log("[MetaMask] Connected:", accounts[0])
-        return
-      }
-
+      // if (typeof window !== "undefined" && window.ethereum) {
+        // const accounts = await window.ethereum.request({
+         // method: "eth_requestAccounts",
+       // })
+       // setWalletAddress(accounts[0])
+       // console.log("[MetaMask] Connected:", accounts[0])
+       // return
+     // }
       if (typeof sdk !== 'undefined') {
         if (sdk.wallet?.ethProvider) {
           const accounts = await sdk.wallet.ethProvider.request({ method: 'eth_accounts' })
