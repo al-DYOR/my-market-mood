@@ -318,6 +318,22 @@ export default function Home() {
       document.documentElement.style.setProperty('--base-app', 'true');
       document.body.style.paddingTop = 'env(safe-area-inset-top)';
       document.body.style.paddingBottom = 'env(safe-area-inset-bottom)';
+
+      if (isBaseApp) {
+    // Полный нативный режим
+    document.documentElement.classList.add('base-app');
+    document.body.style.setProperty('padding-top', 'env(safe-area-inset-top, 0px)');
+    document.body.style.setProperty('padding-bottom', 'env(safe-area-inset-bottom, 0px)');
+    document.body.style.setProperty('margin', '0');
+    
+    // Множественные сигналы готовности
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('baseready'));
+      window.dispatchEvent(new CustomEvent('frameReady'));
+      if (typeof sdk !== 'undefined') sdk.actions.ready();
+    }, 300);
+  }
+}, []);
       
       // Сигнал готовности
       setTimeout(() => {
