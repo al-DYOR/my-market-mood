@@ -4,34 +4,18 @@
     "payload": "eyJkb21haW4iOiJ2MC1teW1hcmtldG1vb2QudmVyY2VsLmFwcCJ9",
     "signature": "yWklO5O9aSULzTaGyD+PXYKu+ExI4WPz9BDSs8UcTngbcLQnRf27BbXZlPW6DiXBRaI+FgPR+zvedB/oQ2OzHhs="
   },
-  "frame": {
-    "version": "1",
-    "name": "Market Mood Today",
-    "short_name": "Market Mood", 
-    "description": "Your current state based on today's market and on-chain identity",
-    "homeUrl": "https://v0-mymarketmood.vercel.app/",
-    "iconUrl": "https://v0-mymarketmood.vercel.app/icon-512.png",
-    "splashImageUrl": "https://v0-mymarketmood.vercel.app/splash.png",
-    "splashBackgroundColor": "#000000",
-    "screenshotUrls": [
-      "https://v0-mymarketmood.vercel.app/screenshot1.png"
-    ],
-    "primaryCategory": "utility",
-    "tags": ["market", "mood", "onchain", "identity", "base"]
-  },
   "miniapp": {
-    "version": "1",
     "name": "Market Mood Today",
-    "short_name": "Market Mood",
-    "description": "Your current state based on today's market and on-chain identity",
-    "homeUrl": "https://v0-mymarketmood.vercel.app/",
+    "version": "1",
     "iconUrl": "https://v0-mymarketmood.vercel.app/icon-512.png",
+    "homeUrl": "https://v0-mymarketmood.vercel.app/",
+    "imageUrl": "https://v0-mymarketmood.vercel.app/opengraph-image.jpg",
     "splashImageUrl": "https://v0-mymarketmood.vercel.app/splash.png",
     "splashBackgroundColor": "#000000",
-    "screenshotUrls": [
-      "https://v0-mymarketmood.vercel.app/screenshot1.png"
-    ],
+    "subtitle": "Mint your trading state NFT",
+    "description": "Your current state based on today's market and on-chain identity",
     "primaryCategory": "utility",
-    "tags": ["market", "mood", "onchain", "identity", "base"]
+    "ogImageUrl": "https://v0-mymarketmood.vercel.app/opengraph-image.jpg",
+    "buttonTitle": "🚀 Mint Mood NFT"
   }
 }
