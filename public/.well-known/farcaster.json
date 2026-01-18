@@ -15,6 +15,7 @@
     "subtitle": "Mint your trading state NFT",
     "description": "Your current state based on today's market and on-chain identity",
     "primaryCategory": "utility",
+    "tags": ["market", "mood", "onchain", "identity", "base"],
     "ogImageUrl": "https://v0-mymarketmood.vercel.app/opengraph-image.jpg",
     "buttonTitle": "🚀 Mint Mood NFT"
   }
