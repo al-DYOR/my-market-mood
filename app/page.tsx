@@ -309,54 +309,62 @@ export default function Home() {
   const [errorMessage, setErrorMessage] = useState<string>("")
   const [skinRequired, setSkinRequired] = useState<bigint>(CONFIG.SKIN_REQUIRED)
   const [byemoneyRequired, setByemoneyRequired] = useState<bigint>(CONFIG.BYEMONEY_REQUIRED)
-  const [isBaseApp, setIsBaseApp] = useState(false) // ДОбавлнено
+  const [isBaseApp, setIsBaseApp] = useState(false)
 
-
-  useEffect(() => {
-  if (typeof window === 'undefined') return;
-  
-  // Проверка Base App UserAgent
-  const baseDetected = navigator.userAgent.includes('Base') || /baseapp/i.test(navigator.userAgent);
-  
-  if (baseDetected) {
-    document.documentElement.style.setProperty('--base-app', 'true');
-    document.body.style.paddingTop = 'env(safe-area-inset-top)';
-    document.body.style.paddingBottom = 'env(safe-area-inset-bottom)';
-
-    document.documentElement.classList.add('base-app');
-    document.body.style.setProperty('padding-top', 'env(safe-area-inset-top, 0px)');
-    document.body.style.setProperty('padding-bottom', 'env(safe-area-inset-bottom, 0px)');
-    document.body.style.setProperty('margin', '0');
+// 🔥 BASE APP ГЛАВНЫЙ useEffect - ЕДИНСТВЕННЫЙ!
+useEffect(() => {
+  const initBaseApp = async () => {
+    if (typeof window === 'undefined') return;
     
-    setTimeout(() => {
-      window.dispatchEvent(new CustomEvent('baseready'));
-      window.dispatchEvent(new CustomEvent('frameReady'));
-      if (typeof sdk !== 'undefined') sdk.actions.ready();
-    }, 300);
+    // Ждём SDK (критично!)
+    const maxWait = 5000;
+    const start = Date.now();
     
-    // Сигнал готовности ВНУТРИ useEffect
+    while (Date.now() - start < maxWait) {
+      if (typeof sdk !== 'undefined' && sdk.actions?.ready) {
+        // Base App детекция
+        const isBase = navigator.userAgent.includes('Base') || /baseapp/i.test(navigator.userAgent);
+        
+        if (isBase) {
+          // UI для Base App
+          document.documentElement.classList.add('base-app');
+          document.documentElement.style.setProperty('--base-app', 'true');
+          document.body.style.setProperty('padding-top', 'env(safe-area-inset-top, 0px)');
+          document.body.style.setProperty('padding-bottom', 'env(safe-area-inset-bottom, 0px)');
+          document.body.style.setProperty('margin', '0');
+          
+          console.log('[Base App] Detected! Sending ready signal...');
+          
+          // 🔥 КРИТИЧНЫЙ СИГНАЛ ДЛЯ BASE APP
+          sdk.actions.ready();
+          window.dispatchEvent(new CustomEvent('baseready'));
+          window.dispatchEvent(new CustomEvent('frameReady'));
+          
+          // Дополнительные сигналы
+          setTimeout(() => {
+            sdk.actions.ready(); // Повтор
+            document.dispatchEvent(new CustomEvent('baseready'));
+          }, 500);
+          
+          setIsBaseApp(true);
+          return;
+        }
+        break;
+      }
+      await new Promise(r => setTimeout(r, 100));
+    }
+    
+    // Fallback сигнал
     setTimeout(() => {
       document.dispatchEvent(new CustomEvent('baseready'));
-    }, 500);
-  }
+    }, 1000);
+  };
+
+  initBaseApp();
 }, []);
   
   const { data: walletClient } = useWalletClient()
   const publicClient = usePublicClient({ chainId: 8453 })
-
-  {/* const { setFrameReady, isFrameReady } = useMiniKit()
-
-  useEffect(() => {
-    if (!isFrameReady) {
-     setFrameReady() // Сигнал "приложение готово" для Base App и Farcaster
-    }
-  }, [setFrameReady, isFrameReady]) */}
-
-  useEffect(() => {
-  if (typeof sdk !== 'undefined') {
-    sdk.actions.ready(); // 🔥 Base App ТРЕБУЕТ!
-    }
-  }, [])
     
   useEffect(() => {
     if (walletAddress) {
