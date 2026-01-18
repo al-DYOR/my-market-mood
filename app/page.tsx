@@ -309,35 +309,37 @@ export default function Home() {
   const [errorMessage, setErrorMessage] = useState<string>("")
   const [skinRequired, setSkinRequired] = useState<bigint>(CONFIG.SKIN_REQUIRED)
   const [byemoneyRequired, setByemoneyRequired] = useState<bigint>(CONFIG.BYEMONEY_REQUIRED)
+  const [isBaseApp, setIsBaseApp] = useState(false) // ДОбавлнено
+
 
   useEffect(() => {
   if (typeof window === 'undefined') return;
   
   // Проверка Base App UserAgent
-  if (navigator.userAgent.includes('Base') || /baseapp/i.test(navigator.userAgent)) {
+  const baseDetected = navigator.userAgent.includes('Base') || /baseapp/i.test(navigator.userAgent);
+  
+  if (baseDetected) {
     document.documentElement.style.setProperty('--base-app', 'true');
     document.body.style.paddingTop = 'env(safe-area-inset-top)';
     document.body.style.paddingBottom = 'env(safe-area-inset-bottom)';
 
-    if (isBaseApp) {
-      document.documentElement.classList.add('base-app');
-      document.body.style.setProperty('padding-top', 'env(safe-area-inset-top, 0px)');
-      document.body.style.setProperty('padding-bottom', 'env(safe-area-inset-bottom, 0px)');
-      document.body.style.setProperty('margin', '0');
-      
-      setTimeout(() => {
-        window.dispatchEvent(new CustomEvent('baseready'));
-        window.dispatchEvent(new CustomEvent('frameReady'));
-        if (typeof sdk !== 'undefined') sdk.actions.ready();
-      }, 300);
-    }
+    document.documentElement.classList.add('base-app');
+    document.body.style.setProperty('padding-top', 'env(safe-area-inset-top, 0px)');
+    document.body.style.setProperty('padding-bottom', 'env(safe-area-inset-bottom, 0px)');
+    document.body.style.setProperty('margin', '0');
+    
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('baseready'));
+      window.dispatchEvent(new CustomEvent('frameReady'));
+      if (typeof sdk !== 'undefined') sdk.actions.ready();
+    }, 300);
     
     // Сигнал готовности ВНУТРИ useEffect
     setTimeout(() => {
       document.dispatchEvent(new CustomEvent('baseready'));
     }, 500);
   }
-}, []); // ✅ ОДИН useEffect, всё внутри
+}, []);
   
   const { data: walletClient } = useWalletClient()
   const publicClient = usePublicClient({ chainId: 8453 })
