@@ -108,9 +108,6 @@ export default function RootLayout({
         <link rel="icon" href="/icon-512.png" type="image/png" />
         <link rel="apple-touch-icon" href="/icon-512.png" sizes="512x512" />
         <link rel="mask-icon" href="/icon-512.png" color="#000000" />
-
-        {/* 🔥🔥 BASE APP CRITICAL — СТРОКА 🔥🔥 */}
-  <meta name="base:app_id" content="69672cf14991800a6d9d61ff" />
         
         {/* 🔥 BASE APP EMBED */}
   <meta name="fc:miniapp" content='{
