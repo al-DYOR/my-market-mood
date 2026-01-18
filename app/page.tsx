@@ -310,37 +310,34 @@ export default function Home() {
   const [skinRequired, setSkinRequired] = useState<bigint>(CONFIG.SKIN_REQUIRED)
   const [byemoneyRequired, setByemoneyRequired] = useState<bigint>(CONFIG.BYEMONEY_REQUIRED)
 
-  // ← ВСТАВЛЯЕМ ТУТ useEffect (МЕЖДУ useState и wagmi hooks):
   useEffect(() => {
-    // Проверка Base App UserAgent
-    if (navigator.userAgent.includes('Base') || /baseapp/i.test(navigator.userAgent)) {
-      // Принудительно нативный режим
-      document.documentElement.style.setProperty('--base-app', 'true');
-      document.body.style.paddingTop = 'env(safe-area-inset-top)';
-      document.body.style.paddingBottom = 'env(safe-area-inset-bottom)';
+  if (typeof window === 'undefined') return;
+  
+  // Проверка Base App UserAgent
+  if (navigator.userAgent.includes('Base') || /baseapp/i.test(navigator.userAgent)) {
+    document.documentElement.style.setProperty('--base-app', 'true');
+    document.body.style.paddingTop = 'env(safe-area-inset-top)';
+    document.body.style.paddingBottom = 'env(safe-area-inset-bottom)';
 
-      if (isBaseApp) {
-    // Полный нативный режим
-    document.documentElement.classList.add('base-app');
-    document.body.style.setProperty('padding-top', 'env(safe-area-inset-top, 0px)');
-    document.body.style.setProperty('padding-bottom', 'env(safe-area-inset-bottom, 0px)');
-    document.body.style.setProperty('margin', '0');
-    
-    // Множественные сигналы готовности
-    setTimeout(() => {
-      window.dispatchEvent(new CustomEvent('baseready'));
-      window.dispatchEvent(new CustomEvent('frameReady'));
-      if (typeof sdk !== 'undefined') sdk.actions.ready();
-    }, 300);
-  }
-}, []);
+    if (isBaseApp) {
+      document.documentElement.classList.add('base-app');
+      document.body.style.setProperty('padding-top', 'env(safe-area-inset-top, 0px)');
+      document.body.style.setProperty('padding-bottom', 'env(safe-area-inset-bottom, 0px)');
+      document.body.style.setProperty('margin', '0');
       
-      // Сигнал готовности
       setTimeout(() => {
-        document.dispatchEvent(new CustomEvent('baseready'));
-      }, 500);
+        window.dispatchEvent(new CustomEvent('baseready'));
+        window.dispatchEvent(new CustomEvent('frameReady'));
+        if (typeof sdk !== 'undefined') sdk.actions.ready();
+      }, 300);
     }
-  }, []);
+    
+    // Сигнал готовности ВНУТРИ useEffect
+    setTimeout(() => {
+      document.dispatchEvent(new CustomEvent('baseready'));
+    }, 500);
+  }
+}, []); // ✅ ОДИН useEffect, всё внутри
   
   const { data: walletClient } = useWalletClient()
   const publicClient = usePublicClient({ chainId: 8453 })
