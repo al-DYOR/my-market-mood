@@ -123,14 +123,6 @@ export default function RootLayout({
     }
   }' />
 
-  {/* Обязательные для Farcaster Frame */}
-  <meta property="fc:frame" content="vNext" />
-  <meta property="fc:frame:image" content="https://v0-mymarketmood.vercel.app/opengraph-image.jpg" />
-  <meta property="fc:frame:image:aspect_ratio" content="1.91:1" /> {/* или "1:1" для квадратного */}
-  <meta property="fc:frame:button:1" content="Open Market Mood" />
-  <meta property="fc:frame:button:1:action" content="post" />
-  <meta property="fc:frame:button:1:target" content="https://v0-mymarketmood.vercel.app/api/frame" />  {/* ← сюда указываем на наш новый endpoint */}
-
   {/* Open Graph (для шаринга и Base App) */}
   <meta property="og:title" content="Market Mood Today" />
   <meta property="og:description" content="Mint your trading state as unique pixel monster NFT (0.00002 ETH)" />
