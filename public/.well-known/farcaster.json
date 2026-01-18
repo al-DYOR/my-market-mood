@@ -18,10 +18,7 @@
       "https://v0-mymarketmood.vercel.app/screenshot1.png",
       "https://v0-mymarketmood.vercel.app/screenshot2.png",
       "https://v0-mymarketmood.vercel.app/screenshot3.png"
-    ],
-    "primaryCategory": "utility",
-    "tags": ["market", "mood", "onchain", "identity", "base"],
-    "appId": "69672cf14991800a6d9d61ff"
+    ]
   },
   "miniapp": {
     "version": "1",
